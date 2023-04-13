@@ -1,6 +1,0 @@
-# Getting Started
-
-To launch the application, you need to run the following commands:
-
-1) **./gradlew bootJar** (or **./gradlew.bat bootJar** on Windows)
-2) **docker compose up**
