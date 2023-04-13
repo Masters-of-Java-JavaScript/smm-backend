@@ -9,8 +9,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import ru.smmassistant.smmbackend.SmmBackendApplicationTest;
 
-
-
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @SpringBootTest(classes = SmmBackendApplicationTest.class)
