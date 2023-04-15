@@ -26,4 +26,4 @@ spring:
         provider:
           keycloak:
             user-name-attribute: preferred_username
-            issuer-uri: http://localhost:8080/realms/smm-assistant
+            issuer-uri: http://100.72.60.201:8080/realms/smm-assistant
