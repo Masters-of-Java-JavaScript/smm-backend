@@ -1,6 +1,3 @@
-server:
-  port: 8081
-
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
@@ -23,7 +20,7 @@ spring:
             client-id: smm-assistant-client
             authorization-grant-type: authorization_code
             client-secret: P2l6tqQYgU0030B2F7KEurqYcWkl33ao
-            redirect-uri: {baseUrl}/login/oauth2/code/{registrationId}'
+            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
             scope:
               - openid
         provider:
