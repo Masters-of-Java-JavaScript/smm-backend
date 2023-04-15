@@ -13,9 +13,9 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/smm_backend
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
-      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER-URI=http://keycloak:8080/realms/smm-assistant
+      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER-URI=http://192.168.3.2:8080/realms/smm-assistant
     ports:
-      - 127.0.0.1:8081:8081
+      - 8081:8081
     restart: unless-stopped
     networks:
       - smm-backend
@@ -37,7 +37,7 @@ services:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
     ports:
-      - 127.0.0.1:8080:8080
+      - 8080:8080
     volumes:
       - ./keycloak:/opt/keycloak/data/import
     command:
