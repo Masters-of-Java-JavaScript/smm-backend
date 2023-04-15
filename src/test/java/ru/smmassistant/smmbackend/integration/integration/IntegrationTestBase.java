@@ -9,7 +9,7 @@ import ru.smmassistant.smmbackend.integration.integration.annotation.Integration
 @IntegrationTest
 public abstract class IntegrationTestBase {
 
-    private static final PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:15.2-alpine");
+    private static final PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:15.2");
 
     @BeforeAll
     static void runContainer() {
