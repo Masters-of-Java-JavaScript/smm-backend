@@ -1,4 +1,4 @@
-version: '0.0.1'
+version: '3.8'
 
 services:
   smm-backend:
@@ -7,22 +7,41 @@ services:
       context: .
     container_name: smm-backend
     depends_on:
-      - postgresdb
+      - keycloak
+      - postgres-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresdb:5432/postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/smm_backend
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER-URI=http://keycloak:8080/realms/smm-assistant
     ports:
-      - "8080:8080"
+      - 127.0.0.1:8081:8081
+    restart: unless-stopped
     networks:
       - smm-backend
 
-  postgresdb:
-    image: postgres:15.2-alpine
-    container_name: postgresdb
+  postgres-db:
+    image: postgres:15.2
+    container_name: postgres-db
     environment:
+      - POSTGRES_DB=smm_backend
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    networks:
+      - smm-backend
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:21.0.2
+    container_name: keycloak
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    ports:
+      - 127.0.0.1:8080:8080
+    volumes:
+      - ./keycloak:/opt/keycloak/data/import
+    command:
+      - start-dev --import-realm
     networks:
       - smm-backend
 

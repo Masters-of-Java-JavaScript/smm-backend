@@ -1,3 +1,6 @@
+server:
+  port: 8081
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
@@ -12,3 +15,18 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: none
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: smm-assistant-client
+            authorization-grant-type: authorization_code
+            client-secret: P2l6tqQYgU0030B2F7KEurqYcWkl33ao
+            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+            scope:
+              - openid
+        provider:
+          keycloak:
+            user-name-attribute: preferred_username
+            issuer-uri: http://localhost:8080/realms/smm-assistant
