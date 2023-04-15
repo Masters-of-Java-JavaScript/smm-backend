@@ -8,7 +8,7 @@ Launch on macOS
 * Install the **_Makefile Language_** and **_CheckStyle_** plugins
 * Go to Preferences... -> Tools -> Checkstyle and choose checkstyle.xml, which lies in the root directory. Activate this configuration file
 * Specify the address of the KeyCloak Auth Server in application.yml file in the property:\
-  ```spring.security.oauth2.client.provider.keycloak.issuer-uri=http://192.168.XXX.XXX:8080/realms/smm-assistant```
+  ```spring.security.oauth2.client.provider.keycloak.issuer-uri=http://XXX.XXX.XXX.XXX:8080/realms/smm-assistant```
 * To launch the application:
   ```bash
   make up
@@ -26,7 +26,7 @@ Launch on Windows
 * Install the **_Makefile Language_** and **_CheckStyle_** plugins for IDE
 * Go to Settings... -> Tools -> Checkstyle and choose checkstyle.xml, which lies in the root directory. Activate this configuration file
 * Specify the address of the KeyCloak Auth Server in application.yml file in the property:\
-   ```pring.security.oauth2.client.provider.keycloak.issuer-uri=http://192.168.XXX.XXX:8080/realms/smm-assistant```
+   ```pring.security.oauth2.client.provider.keycloak.issuer-uri=http://XXX.XXX.XXX.XXX:8080/realms/smm-assistant```
 * To launch the application:
   ```bash
   make upw
