@@ -27,6 +27,8 @@ services:
       - POSTGRES_PASSWORD=postgres
     networks:
       - smm-backend
+    ports:
+      - 5432:5432
 
 networks:
   smm-backend:
