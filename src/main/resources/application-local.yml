@@ -1,32 +1,30 @@
 server:
-  port: 8081
+  port: 8000
+  compression:
+    enabled: false
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: postgres
     driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:postgres}${PGADDITIONALPARAMS:}
+    username: ${PGUSER:postgres}
+    password: ${PGPASSWORD:postgres}
   jpa:
     open-in-view: false
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
     hibernate:
       ddl-auto: none
   security:
     oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri:  ${KEYCLOAK_REALM_URL:http://smmassistant.hopto.org:8080/realms/smm-assistant}
       client:
         registration:
-          keycloak:
-            client-id: smm-assistant-client
-            authorization-grant-type: authorization_code
-            client-secret: P2l6tqQYgU0030B2F7KEurqYcWkl33ao
-            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
-            scope:
-              - openid
+          keycloak-service-account-client:
+            provider: keycloak
+            client-id: ${KEYCLOAK_SERVICE_ACCOUNT_CLIENT_ID:smm-assistant-client}
+            client-secret: ${KEYCLOAK_SERVICE_ACCOUNT_CLIENT_SECRET:P2l6tqQYgU0030B2F7KEurqYcWkl33ao}
+            authorization-grant-type: client_credentials
         provider:
           keycloak:
-            user-name-attribute: preferred_username
-            issuer-uri: http://smmassistant.hopto.org:8080/realms/smm-assistant
+            token-uri: ${KEYCLOAK_REALM_URL:http://smmassistant.hopto.org:8080/realms/smm-assistant}/protocol/openid-connect/token
