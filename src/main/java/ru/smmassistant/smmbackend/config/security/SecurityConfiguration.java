@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -17,7 +18,8 @@ public class SecurityConfiguration {
         httpSecurity
             .authorizeHttpRequests(urlConfig -> urlConfig
                 .requestMatchers("/api/v1").permitAll()
-                .anyRequest().hasAuthority(SMM_ASSISTANT_CRUD_AUTHORITY));
+                .anyRequest().hasRole(SMM_ASSISTANT_CRUD_AUTHORITY))
+            .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
 
         return httpSecurity.build();
     }
