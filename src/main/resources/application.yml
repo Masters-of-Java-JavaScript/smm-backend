@@ -25,3 +25,6 @@ spring:
         provider:
           keycloak:
             token-uri: ${KEYCLOAK_REALM_URL:http://smmassistant.hopto.org:8080/realms/smm-assistant}/protocol/openid-connect/token
+
+client:
+  url: ${FRONTEND_URL:http://smmassistant.hopto.org:3000}
