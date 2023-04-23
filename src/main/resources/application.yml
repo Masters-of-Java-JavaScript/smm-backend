@@ -12,19 +12,18 @@ spring:
       ddl-auto: none
   security:
     oauth2:
-      resourceserver:
+      resource-server:
         jwt:
           issuer-uri:  ${KEYCLOAK_REALM_URL:http://smmassistant.hopto.org:8080/realms/smm-assistant}
       client:
+        provider:
+          keycloak:
+            token-uri: ${KEYCLOAK_REALM_URL:http://smmassistant.hopto.org:8080/realms/smm-assistant}/protocol/openid-connect/token
         registration:
           keycloak-service-account-client:
             provider: keycloak
             client-id: ${KEYCLOAK_SERVICE_ACCOUNT_CLIENT_ID:smm-assistant-client}
             client-secret: ${KEYCLOAK_SERVICE_ACCOUNT_CLIENT_SECRET:P2l6tqQYgU0030B2F7KEurqYcWkl33ao}
-            authorization-grant-type: client_credentials
-        provider:
-          keycloak:
-            token-uri: ${KEYCLOAK_REALM_URL:http://smmassistant.hopto.org:8080/realms/smm-assistant}/protocol/openid-connect/token
 
 client:
   url: ${FRONTEND_URL:http://smmassistant.hopto.org:3000}

@@ -1,7 +1,5 @@
 package ru.smmassistant.smmbackend.config.security;
 
-import static ru.smmassistant.smmbackend.model.Authority.ROLE_ADMIN;
-
 import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import ru.smmassistant.smmbackend.model.Role;
 
 
 @Configuration
@@ -35,12 +34,16 @@ public class SecurityConfiguration {
             .csrf().disable()
             /* Allows to execute OPTIONS requests from the client (preflight requests) without authorization */
             .cors().and()
-            /* Access to certain paths is granted, and the necessary Authority to this path is specified.
+            /* Access to certain paths is granted, and the necessary Role to this path is specified.
              * The remaining paths are available only to authenticated clients
              */
             .authorizeHttpRequests(urlConfig -> urlConfig
-                .requestMatchers("/api/v1").hasAuthority(ROLE_ADMIN.name())
-                .anyRequest().authenticated())
+                /* SpringDoc */
+                .requestMatchers("/v3/api-docs/**").permitAll()
+                .requestMatchers("/swagger-ui/**").permitAll()
+                /* Application endpoints */
+                .requestMatchers("/api/v1").hasAuthority(Role.ADMIN.getAuthority())
+                .anyRequest().permitAll())
             /* Enabling protection for OAuth 2, i.e. enabling accessToken verification */
             .oauth2ResourceServer()
             /* JWT is used to get accessToken */
