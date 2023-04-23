@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1")
 @Tag(name = "Стартовый контроллер")
+@SecurityRequirement(name = "bearerAuth")
 public class StartController {
 
     @Operation(summary = "Стартовый метод, возвращающий \"Hello\"")
@@ -22,7 +23,6 @@ public class StartController {
         @ApiResponse(responseCode = "404", description = "Ничего не найдено по запросу"),
         @ApiResponse(responseCode = "500", description = "Сервис недоступен")
     })
-    @SecurityRequirement(name = "bearerAuth")
     @GetMapping
     public String getStarted() {
         return "Hello";
