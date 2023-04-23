@@ -13,7 +13,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import ru.smmassistant.smmbackend.model.Role;
 
-
 @Configuration
 public class SecurityConfiguration {
 
