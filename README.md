@@ -38,5 +38,5 @@ Launch on Windows
 
 SpringDoc
 -----
-[OpenAPI description](http://localhost:8080/v3/api-docs)
+[OpenAPI description](http://localhost:8080/v3/api-docs)\
 [Swagger](http://localhost:8080/swagger-ui.html)
