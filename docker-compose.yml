@@ -9,7 +9,7 @@ services:
     depends_on:
       - postgres-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/smm_backend
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/postgres
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
     ports:
@@ -22,7 +22,7 @@ services:
     image: postgres:15.2
     container_name: postgres-db
     environment:
-      - POSTGRES_DB=smm_backend
+      - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     networks:
