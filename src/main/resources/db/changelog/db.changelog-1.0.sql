@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS smmassistant.users
 
 COMMENT ON TABLE smmassistant.users IS 'Таблица пользователей';
 
-COMMENT ON COLUMN smmassistant.users.id             IS 'Идентификатор пользователя';
+COMMENT ON COLUMN smmassistant.users.id             IS 'Уникальный идентификатор пользователя';
 COMMENT ON COLUMN smmassistant.users.username       IS 'Email почта польщзователя';
 COMMENT ON COLUMN smmassistant.users.birth_date     IS 'Дата рождения пользователя';
 COMMENT ON COLUMN smmassistant.users.firstname       IS 'Имя пользователя';
@@ -34,18 +34,20 @@ CREATE TABLE IF NOT EXISTS smmassistant.publication
 (
     id              BIGSERIAL                   PRIMARY KEY,
     user_id         SERIAL                      REFERENCES smmassistant.users(id) ON DELETE CASCADE,
-    create_dttm     TIMESTAMP WITH TIME ZONE    NOT NULL,
-    text            VARCHAR(2048),
+    publish_date    TIMESTAMP WITH TIME ZONE    NOT NULL,
+    message         VARCHAR(2048),
+    attachments     VARCHAR(128),
     link            VARCHAR(512)                NOT NULL,
-    owner_id        VARCHAR(64)                 NOT NULL
+    response        VARCHAR(1024)
 );
 
 COMMENT ON TABLE smmassistant.publication IS 'Таблица публикаций';
 
-COMMENT ON COLUMN smmassistant.publication.id           IS 'Идентификатор публикации';
+COMMENT ON COLUMN smmassistant.publication.id           IS 'Уникальный идентификатор публикации';
 COMMENT ON COLUMN smmassistant.publication.user_id      IS 'Идентификатор пользователя';
-COMMENT ON COLUMN smmassistant.publication.create_dttm  IS 'Дата и время публикации с учетом тайм-зоны';
-COMMENT ON COLUMN smmassistant.publication.text         IS 'Описание публикации';
+COMMENT ON COLUMN smmassistant.publication.publish_date IS 'Дата и время публикации с учетом тайм-зоны';
+COMMENT ON COLUMN smmassistant.publication.message      IS 'Текст сообщения публикации';
+COMMENT ON COLUMN smmassistant.publication.attachments  IS 'Объект или несколько объектов, приложенных к записи';
 COMMENT ON COLUMN smmassistant.publication.link         IS 'Ссылка на публикацию';
-COMMENT ON COLUMN smmassistant.publication.owner_id     IS 'Идентификатор владельца стены, на которой размещена запись';
+COMMENT ON COLUMN smmassistant.publication.response     IS 'Ответ от внешнего серсива';
 --rollback DROP TABLE smmassistant.publication;

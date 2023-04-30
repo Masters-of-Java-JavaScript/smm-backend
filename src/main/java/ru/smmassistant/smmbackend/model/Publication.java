@@ -7,12 +7,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(schema = "smmassistant", name = "publication")
@@ -25,11 +23,13 @@ public class Publication {
 
     private Integer userId;
 
-    private LocalDateTime createDttm;
+    private LocalDateTime publishDate;
 
-    private String text;
+    private String message;
+
+    private String attachments;
 
     private String link;
 
-    private Integer ownerId;
+    private String response;
 }

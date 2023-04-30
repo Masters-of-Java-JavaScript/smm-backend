@@ -28,3 +28,8 @@ spring:
 
 client:
   url: ${FRONTEND_URL:http://smmassistant.hopto.org:3000}
+
+api:
+  vk:
+    url: https://api.vk.com/method
+    version: 5.131

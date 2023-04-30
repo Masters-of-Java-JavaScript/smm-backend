@@ -1,16 +1,14 @@
 package ru.smmassistant.smmbackend.dto;
 
 import java.time.LocalDateTime;
-import lombok.Value;
 
-@Value
-public class PublicationReadDto {
+public record PublicationReadDto(
 
-    LocalDateTime createdDttm;
+    LocalDateTime publishDate,
 
-    String text;
+    String message,
 
-    String link;
+    String attachments,
 
-    Integer ownerId;
+    String link) {
 }

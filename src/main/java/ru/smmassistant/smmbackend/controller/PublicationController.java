@@ -21,19 +21,15 @@ public class PublicationController {
 
     private final PublicationService publicationService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/{user_id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<PublicationReadDto> findAllByUserId(@PathVariable("id") Integer userId) {
+    public List<PublicationReadDto> findAllByUserId(@PathVariable("user_id") Integer userId) {
         return publicationService.findAllByUserId(userId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PublicationReadDto create(@RequestBody PublicationCreateDto publicationDto) {
-        return publicationService.create(publicationDto);
+    public PublicationReadDto publish(@RequestBody PublicationCreateDto publicationCreateDto) {
+        return publicationService.publish(publicationCreateDto);
     }
 }
-
-
-
-

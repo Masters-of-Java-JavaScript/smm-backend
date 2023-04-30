@@ -10,9 +10,9 @@ public class PublicationReadMapper implements Mapper<Publication, PublicationRea
     @Override
     public PublicationReadDto map(Publication publication) {
         return new PublicationReadDto(
-            publication.getCreateDttm(),
-            publication.getText(),
-            publication.getLink(),
-            publication.getOwnerId());
+            publication.getPublishDate(),
+            publication.getMessage(),
+            publication.getAttachments(),
+            publication.getLink());
     }
 }

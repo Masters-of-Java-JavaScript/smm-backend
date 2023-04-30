@@ -1,18 +1,28 @@
 package ru.smmassistant.smmbackend.dto;
 
-import java.time.LocalDateTime;
-import lombok.Value;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import ru.smmassistant.smmbackend.validation.annotation.NotBlankAttachments;
+import ru.smmassistant.smmbackend.validation.annotation.NotBlankMessage;
 
-@Value
-public class PublicationCreateDto {
+@NotBlankMessage
+@NotBlankAttachments
+public record PublicationCreateDto(
 
-    LocalDateTime createdDttm;
+    @NotNull(message = "Параметр user_id является обязательным")
+    Integer userId,
 
-    Integer userId;
+    @NotBlank(message = "Параметр access_token является обязательным")
+    String accessToken,
 
-    String link;
+    @NotNull(message = "Параметр owner_id является обязательным")
+    Integer ownerId,
 
-    Integer ownerId;
+    String message,
 
-    String text;
+    String attachments,
+
+    Long publishDate,
+
+    Integer postId) {
 }
