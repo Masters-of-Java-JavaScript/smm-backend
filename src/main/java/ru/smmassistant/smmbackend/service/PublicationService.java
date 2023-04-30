@@ -47,16 +47,15 @@ public class PublicationService {
 
         Object response = makePublish(publicationCreateDto);
 
+        Publication publication = publicationCreateMapper.map(publicationCreateDto);
         Integer postId = ((LinkedHashMap<String, LinkedHashMap<String, Integer>>) response)
             .get("response")
             .get("post_id");
-
-        Publication publication = publicationCreateMapper.map(publicationCreateDto);
         publication.setLink(String.format("https://vk.com/id%d?w=wall%d_%d",
             publicationCreateDto.ownerId(),
             publicationCreateDto.ownerId(),
             postId));
-        publication.setResponse("response");
+        publication.setResponse(response.toString());
         publicationRepository.save(publication);
 
         return publicationReadMapper.map(publication);
