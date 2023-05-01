@@ -23,7 +23,7 @@ import ru.smmassistant.smmbackend.service.client.VkClient;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
-public class PublicationService {
+public class VkPublicationService {
 
     private static final String PRIVATE_PUBLICATION_URL = "https://vk.com/id%d?w=wall%d_%d";
     private static final String PUBLIC_PUBLICATION_URL = "https://vk.com/public%d?w=wall%d_%d";
