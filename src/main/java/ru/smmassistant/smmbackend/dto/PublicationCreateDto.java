@@ -3,9 +3,11 @@ package ru.smmassistant.smmbackend.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
+import lombok.Builder;
 import ru.smmassistant.smmbackend.validation.annotation.NotBlankAttachments;
 import ru.smmassistant.smmbackend.validation.annotation.NotBlankMessage;
 
+@Builder
 @NotBlankMessage
 @NotBlankAttachments
 public record PublicationCreateDto(
