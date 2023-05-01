@@ -2,7 +2,6 @@ package ru.smmassistant.smmbackend.service;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -71,14 +70,14 @@ public class PublicationService {
         return publicationReadMapper.map(publication);
     }
 
-    private void validate(@Valid PublicationCreateDto publicationCreateDto) {
+    private void validate(PublicationCreateDto publicationCreateDto) {
         Set<ConstraintViolation<PublicationCreateDto>> validationResult = validator.validate(publicationCreateDto);
         if (!validationResult.isEmpty()) {
             throw new ConstraintViolationException(validationResult);
         }
     }
 
-    private Object makePublish(@Valid PublicationCreateDto publicationCreateDto) {
+    private Object makePublish(PublicationCreateDto publicationCreateDto) {
         Map<String, Object> requestParams = new HashMap<>();
 
         requestParams.put("access_token", publicationCreateDto.accessToken());
