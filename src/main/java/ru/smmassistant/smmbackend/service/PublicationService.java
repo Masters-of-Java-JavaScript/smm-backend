@@ -55,12 +55,12 @@ public class PublicationService {
             .get("response")
             .get("post_id");
         if (publicationCreateDto.ownerId() > 0) {
-            publication.setLink(String.format(PRIVATE_PUBLICATION_URL,
+            publication.setLink(PRIVATE_PUBLICATION_URL.formatted(
                 publicationCreateDto.ownerId(),
                 publicationCreateDto.ownerId(),
                 postId));
         } else {
-            publication.setLink(String.format(PUBLIC_PUBLICATION_URL,
+            publication.setLink(PUBLIC_PUBLICATION_URL.formatted(
                 Math.abs(publicationCreateDto.ownerId()),
                 publicationCreateDto.ownerId(),
                 postId));
