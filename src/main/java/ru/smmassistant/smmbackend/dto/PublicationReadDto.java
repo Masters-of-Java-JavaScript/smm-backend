@@ -1,10 +1,10 @@
 package ru.smmassistant.smmbackend.dto;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public record PublicationReadDto(
 
-    LocalDateTime publishDate,
+    OffsetDateTime publishDate,
 
     String message,
 

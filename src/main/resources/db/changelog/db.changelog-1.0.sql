@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS smmassistant.publication
 (
     id              BIGSERIAL                   PRIMARY KEY,
     user_id         SERIAL                      REFERENCES smmassistant.users(id) ON DELETE CASCADE,
-    publish_date    TIMESTAMP WITH TIME ZONE    NOT NULL,
+    publish_date    TIMESTAMP                   NOT NULL,
     message         VARCHAR(2048),
     attachments     VARCHAR(128),
     link            VARCHAR(512)                NOT NULL,
@@ -45,7 +45,7 @@ COMMENT ON TABLE smmassistant.publication IS 'Таблица публикаци�
 
 COMMENT ON COLUMN smmassistant.publication.id           IS 'Уникальный идентификатор публикации';
 COMMENT ON COLUMN smmassistant.publication.user_id      IS 'Идентификатор пользователя';
-COMMENT ON COLUMN smmassistant.publication.publish_date IS 'Дата и время публикации с учетом тайм-зоны';
+COMMENT ON COLUMN smmassistant.publication.publish_date IS 'Дата и время публикации';
 COMMENT ON COLUMN smmassistant.publication.message      IS 'Текст сообщения публикации';
 COMMENT ON COLUMN smmassistant.publication.attachments  IS 'Объект или несколько объектов, приложенных к записи';
 COMMENT ON COLUMN smmassistant.publication.link         IS 'Ссылка на публикацию';

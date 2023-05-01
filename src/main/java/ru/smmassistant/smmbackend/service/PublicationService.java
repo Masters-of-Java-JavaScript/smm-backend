@@ -75,7 +75,7 @@ public class PublicationService {
         requestParams.put("owner_id", publicationCreateDto.ownerId());
         requestParams.put("message", publicationCreateDto.message());
         requestParams.put("attachments", publicationCreateDto.attachments());
-        requestParams.put("publish_date", publicationCreateDto.publishDate());
+        requestParams.put("publish_date", publicationCreateDto.publishDate().toEpochSecond());
         requestParams.put("post_id", publicationCreateDto.postId());
         requestParams.put("v", apiVersion);
 

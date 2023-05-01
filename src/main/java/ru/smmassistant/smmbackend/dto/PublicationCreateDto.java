@@ -2,6 +2,7 @@ package ru.smmassistant.smmbackend.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.time.OffsetDateTime;
 import ru.smmassistant.smmbackend.validation.annotation.NotBlankAttachments;
 import ru.smmassistant.smmbackend.validation.annotation.NotBlankMessage;
 
@@ -22,7 +23,7 @@ public record PublicationCreateDto(
 
     String attachments,
 
-    Long publishDate,
+    OffsetDateTime publishDate,
 
     Integer postId) {
 }
