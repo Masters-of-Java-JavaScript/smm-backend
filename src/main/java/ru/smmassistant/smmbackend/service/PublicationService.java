@@ -26,6 +26,9 @@ import ru.smmassistant.smmbackend.service.client.VkClient;
 @Service
 public class PublicationService {
 
+    private static final String privatePublicationUrl = "https://vk.com/id%d?w=wall%d_%d";
+    private static final String publicPublicationUrl = "https://vk.com/public%d?w=wall%d_%d";
+
     @Value("${api.vk.version}")
     private final String apiVersion;
     private final PublicationRepository publicationRepository;
@@ -51,10 +54,17 @@ public class PublicationService {
         Integer postId = ((LinkedHashMap<String, LinkedHashMap<String, Integer>>) response)
             .get("response")
             .get("post_id");
-        publication.setLink(String.format("https://vk.com/id%d?w=wall%d_%d",
-            publicationCreateDto.ownerId(),
-            publicationCreateDto.ownerId(),
-            postId));
+        if (publicationCreateDto.ownerId() > 0) {
+            publication.setLink(String.format(privatePublicationUrl,
+                publicationCreateDto.ownerId(),
+                publicationCreateDto.ownerId(),
+                postId));
+        } else {
+            publication.setLink(String.format(publicPublicationUrl,
+                Math.abs(publicationCreateDto.ownerId()),
+                publicationCreateDto.ownerId(),
+                postId));
+        }
         publication.setResponse(response.toString());
         publicationRepository.save(publication);
 
