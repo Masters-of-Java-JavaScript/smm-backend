@@ -1,17 +1,15 @@
 package ru.smmassistant.smmbackend.service;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Validator;
+import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import ru.smmassistant.smmbackend.dto.PublicationCreateDto;
 import ru.smmassistant.smmbackend.dto.PublicationReadDto;
 import ru.smmassistant.smmbackend.mapper.PublicationCreateMapper;
@@ -22,6 +20,7 @@ import ru.smmassistant.smmbackend.service.client.VkClient;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Validated
 @Service
 public class VkPublicationService {
 
@@ -33,7 +32,6 @@ public class VkPublicationService {
     private final PublicationRepository publicationRepository;
     private final PublicationReadMapper publicationReadMapper;
     private final PublicationCreateMapper publicationCreateMapper;
-    private final Validator validator;
     private final VkClient vkClient;
 
     public List<PublicationReadDto> findAllByUserId(Integer userId) {
@@ -44,9 +42,7 @@ public class VkPublicationService {
     }
 
     @Transactional
-    public PublicationReadDto publish(PublicationCreateDto publicationCreateDto) {
-        validate(publicationCreateDto);
-
+    public PublicationReadDto publish(@Valid PublicationCreateDto publicationCreateDto) {
         Object response = makePublish(publicationCreateDto);
 
         Publication publication = publicationCreateMapper.map(publicationCreateDto);
@@ -68,13 +64,6 @@ public class VkPublicationService {
         publicationRepository.save(publication);
 
         return publicationReadMapper.map(publication);
-    }
-
-    private void validate(PublicationCreateDto publicationCreateDto) {
-        Set<ConstraintViolation<PublicationCreateDto>> validationResult = validator.validate(publicationCreateDto);
-        if (!validationResult.isEmpty()) {
-            throw new ConstraintViolationException(validationResult);
-        }
     }
 
     private Object makePublish(PublicationCreateDto publicationCreateDto) {

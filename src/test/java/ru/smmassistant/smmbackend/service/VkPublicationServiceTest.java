@@ -13,20 +13,17 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Validator;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.smmassistant.smmbackend.config.validation.ValidationConfiguration;
 import ru.smmassistant.smmbackend.dto.PublicationCreateDto;
 import ru.smmassistant.smmbackend.dto.PublicationReadDto;
 import ru.smmassistant.smmbackend.mapper.PublicationCreateMapper;
@@ -61,9 +58,6 @@ class VkPublicationServiceTest {
 
     @Mock
     private VkClient vkClient;
-
-    @Spy
-    private Validator validator = new ValidationConfiguration().validator();
 
     @InjectMocks
     private VkPublicationService vkPublicationService;
@@ -149,11 +143,11 @@ class VkPublicationServiceTest {
         assertThat(actualResult).isNotNull();
         assertEquals(expectedResult, actualResult);
 
-        verify(vkClient).publish(any(Map.class));
+        verify(vkClient).publish(anyMap());
         verify(publicationCreateMapper).map(any(PublicationCreateDto.class));
         verify(publicationRepository).save(any(Publication.class));
         verify(publicationReadMapper).map(any(Publication.class));
-        verifyNoMoreInteractions(validator, vkClient, publicationCreateMapper, publicationRepository, publicationReadMapper);
+        verifyNoMoreInteractions(vkClient, publicationCreateMapper, publicationRepository, publicationReadMapper);
     }
 
     @Test
@@ -185,11 +179,11 @@ class VkPublicationServiceTest {
         assertThat(actualResult).isNotNull();
         assertEquals(expectedResult, actualResult);
 
-        verify(vkClient).publish(any(Map.class));
+        verify(vkClient).publish(anyMap());
         verify(publicationCreateMapper).map(any(PublicationCreateDto.class));
         verify(publicationRepository).save(any(Publication.class));
         verify(publicationReadMapper).map(any(Publication.class));
-        verifyNoMoreInteractions(validator, vkClient, publicationCreateMapper, publicationRepository, publicationReadMapper);
+        verifyNoMoreInteractions(vkClient, publicationCreateMapper, publicationRepository, publicationReadMapper);
     }
 
     @Test
@@ -205,7 +199,7 @@ class VkPublicationServiceTest {
             .build();
 
         assertThrows(ConstraintViolationException.class, () -> vkPublicationService.publish(publicationCreateDto));
-        verifyNoMoreInteractions(validator, vkClient, publicationCreateMapper, publicationRepository, publicationReadMapper);
+        verifyNoMoreInteractions(vkClient, publicationCreateMapper, publicationRepository, publicationReadMapper);
     }
 
     @Test
@@ -221,7 +215,7 @@ class VkPublicationServiceTest {
             .build();
 
         assertThrows(ConstraintViolationException.class, () -> vkPublicationService.publish(publicationCreateDto));
-        verifyNoMoreInteractions(validator, vkClient, publicationCreateMapper, publicationRepository, publicationReadMapper);
+        verifyNoMoreInteractions(vkClient, publicationCreateMapper, publicationRepository, publicationReadMapper);
     }
 
     @Test
@@ -237,7 +231,7 @@ class VkPublicationServiceTest {
             .build();
 
         assertThrows(ConstraintViolationException.class, () -> vkPublicationService.publish(publicationCreateDto));
-        verifyNoMoreInteractions(validator, vkClient, publicationCreateMapper, publicationRepository, publicationReadMapper);
+        verifyNoMoreInteractions(vkClient, publicationCreateMapper, publicationRepository, publicationReadMapper);
     }
 
     @Test
@@ -253,6 +247,6 @@ class VkPublicationServiceTest {
             .build();
 
         assertThrows(ConstraintViolationException.class, () -> vkPublicationService.publish(publicationCreateDto));
-        verifyNoMoreInteractions(validator, vkClient, publicationCreateMapper, publicationRepository, publicationReadMapper);
+        verifyNoMoreInteractions(vkClient, publicationCreateMapper, publicationRepository, publicationReadMapper);
     }
 }
