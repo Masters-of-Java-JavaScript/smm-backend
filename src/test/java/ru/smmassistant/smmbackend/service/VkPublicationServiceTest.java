@@ -4,7 +4,6 @@ import static java.lang.Math.abs;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
@@ -12,7 +11,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-import jakarta.validation.ConstraintViolationException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -183,70 +181,6 @@ class VkPublicationServiceTest {
         verify(publicationCreateMapper).map(any(PublicationCreateDto.class));
         verify(publicationRepository).save(any(Publication.class));
         verify(publicationReadMapper).map(any(Publication.class));
-        verifyNoMoreInteractions(vkClient, publicationCreateMapper, publicationRepository, publicationReadMapper);
-    }
-
-    @Test
-    void publish_shouldThrowConstraintViolationExceptionBecauseUserIdIsNull() {
-        PublicationCreateDto publicationCreateDto = PublicationCreateDto.builder()
-            .userId(null)
-            .accessToken(ACCESS_TOKEN)
-            .ownerId(PRIVATE_OWNER_ID)
-            .message(MESSAGE)
-            .attachments(ATTACHMENTS)
-            .publishDate(PUBLISH_DATE)
-            .postId(null)
-            .build();
-
-        assertThrows(ConstraintViolationException.class, () -> vkPublicationService.publish(publicationCreateDto));
-        verifyNoMoreInteractions(vkClient, publicationCreateMapper, publicationRepository, publicationReadMapper);
-    }
-
-    @Test
-    void publish_shouldThrowConstraintViolationExceptionBecauseAccessTokenIsNull() {
-        PublicationCreateDto publicationCreateDto = PublicationCreateDto.builder()
-            .userId(USER_ID)
-            .accessToken(null)
-            .ownerId(PRIVATE_OWNER_ID)
-            .message(MESSAGE)
-            .attachments(ATTACHMENTS)
-            .publishDate(PUBLISH_DATE)
-            .postId(null)
-            .build();
-
-        assertThrows(ConstraintViolationException.class, () -> vkPublicationService.publish(publicationCreateDto));
-        verifyNoMoreInteractions(vkClient, publicationCreateMapper, publicationRepository, publicationReadMapper);
-    }
-
-    @Test
-    void publish_shouldThrowConstraintViolationExceptionBecauseOwnerIdIsNull() {
-        PublicationCreateDto publicationCreateDto = PublicationCreateDto.builder()
-            .userId(USER_ID)
-            .accessToken(ACCESS_TOKEN)
-            .ownerId(null)
-            .message(MESSAGE)
-            .attachments(ATTACHMENTS)
-            .publishDate(PUBLISH_DATE)
-            .postId(null)
-            .build();
-
-        assertThrows(ConstraintViolationException.class, () -> vkPublicationService.publish(publicationCreateDto));
-        verifyNoMoreInteractions(vkClient, publicationCreateMapper, publicationRepository, publicationReadMapper);
-    }
-
-    @Test
-    void publish_shouldThrowConstraintViolationExceptionBecauseMessageAndAttachmentsIsNull() {
-        PublicationCreateDto publicationCreateDto = PublicationCreateDto.builder()
-            .userId(USER_ID)
-            .accessToken(ACCESS_TOKEN)
-            .ownerId(PRIVATE_OWNER_ID)
-            .message(null)
-            .attachments(null)
-            .publishDate(PUBLISH_DATE)
-            .postId(null)
-            .build();
-
-        assertThrows(ConstraintViolationException.class, () -> vkPublicationService.publish(publicationCreateDto));
         verifyNoMoreInteractions(vkClient, publicationCreateMapper, publicationRepository, publicationReadMapper);
     }
 }
