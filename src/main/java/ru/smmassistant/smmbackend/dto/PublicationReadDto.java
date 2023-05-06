@@ -10,7 +10,5 @@ public record PublicationReadDto(
 
     String message,
 
-    String attachments,
-
-    String link) {
+    String attachments) {
 }

@@ -12,5 +12,5 @@ import org.springframework.web.service.annotation.PostExchange;
 public interface VkClient {
 
     @PostExchange("/wall.post")
-    Object publish(@RequestParam Map<String, Object> requestParam);
+    String publish(@RequestParam Map<String, Object> requestParam);
 }

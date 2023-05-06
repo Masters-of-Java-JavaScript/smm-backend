@@ -36,9 +36,7 @@ CREATE TABLE IF NOT EXISTS smmassistant.publication
     user_id         SERIAL                      REFERENCES smmassistant.users(id) ON DELETE CASCADE,
     publish_date    TIMESTAMP                   NOT NULL,
     message         VARCHAR(2048),
-    attachments     VARCHAR(128),
-    link            VARCHAR(512)                NOT NULL,
-    response        VARCHAR(1024)
+    attachments     VARCHAR(128)
 );
 
 COMMENT ON TABLE smmassistant.publication IS 'Таблица публикаций';
@@ -48,6 +46,4 @@ COMMENT ON COLUMN smmassistant.publication.user_id      IS 'Идентифика
 COMMENT ON COLUMN smmassistant.publication.publish_date IS 'Дата и время публикации';
 COMMENT ON COLUMN smmassistant.publication.message      IS 'Текст сообщения публикации';
 COMMENT ON COLUMN smmassistant.publication.attachments  IS 'Объект или несколько объектов, приложенных к записи';
-COMMENT ON COLUMN smmassistant.publication.link         IS 'Ссылка на публикацию';
-COMMENT ON COLUMN smmassistant.publication.response     IS 'Ответ от внешнего серсива';
 --rollback DROP TABLE smmassistant.publication;

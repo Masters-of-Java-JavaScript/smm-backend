@@ -30,8 +30,4 @@ public class Publication {
     private String message;
 
     private String attachments;
-
-    private String link;
-
-    private String response;
 }

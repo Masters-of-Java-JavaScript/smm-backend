@@ -12,7 +12,6 @@ public class PublicationReadMapper implements Mapper<Publication, PublicationRea
         return new PublicationReadDto(
             publication.getPublishDate(),
             publication.getMessage(),
-            publication.getAttachments(),
-            publication.getLink());
+            publication.getAttachments());
     }
 }

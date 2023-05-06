@@ -12,24 +12,24 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.smmassistant.smmbackend.dto.PublicationCreateDto;
 import ru.smmassistant.smmbackend.dto.PublicationReadDto;
-import ru.smmassistant.smmbackend.service.VkPublicationService;
+import ru.smmassistant.smmbackend.service.PublicationService;
 
 @RequiredArgsConstructor
 @RequestMapping("/publication")
 @RestController
 public class PublicationController {
 
-    private final VkPublicationService vkPublicationService;
+    private final PublicationService publicationService;
 
     @GetMapping("/{user_id}")
     @ResponseStatus(HttpStatus.OK)
     public List<PublicationReadDto> findAllByUserId(@PathVariable("user_id") Integer userId) {
-        return vkPublicationService.findAllByUserId(userId);
+        return publicationService.findAllByUserId(userId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PublicationReadDto publish(@RequestBody PublicationCreateDto publicationCreateDto) {
-        return vkPublicationService.publish(publicationCreateDto);
+        return publicationService.publish(publicationCreateDto);
     }
 }

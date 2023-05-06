@@ -3,7 +3,9 @@ package ru.smmassistant.smmbackend.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
+import java.util.Set;
 import lombok.Builder;
+import ru.smmassistant.smmbackend.model.SocialNetwork;
 import ru.smmassistant.smmbackend.validation.annotation.NotBlankAttachments;
 import ru.smmassistant.smmbackend.validation.annotation.NotBlankMessage;
 
@@ -27,5 +29,7 @@ public record PublicationCreateDto(
 
     OffsetDateTime publishDate,
 
-    Integer postId) {
+    Integer postId,
+
+    Set<SocialNetwork> networkPublishSet) {
 }

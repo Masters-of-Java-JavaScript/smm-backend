@@ -1,27 +1,19 @@
 package ru.smmassistant.smmbackend.service;
 
-import jakarta.validation.Valid;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 import ru.smmassistant.smmbackend.dto.PublicationCreateDto;
-import ru.smmassistant.smmbackend.dto.PublicationReadDto;
-import ru.smmassistant.smmbackend.mapper.PublicationCreateMapper;
-import ru.smmassistant.smmbackend.mapper.PublicationReadMapper;
-import ru.smmassistant.smmbackend.model.Publication;
-import ru.smmassistant.smmbackend.repository.PublicationRepository;
+import ru.smmassistant.smmbackend.model.PublicationResponse;
+import ru.smmassistant.smmbackend.parser.VkParser;
 import ru.smmassistant.smmbackend.service.client.VkClient;
 
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
-@Validated
 @Service
+@Transactional(readOnly = true)
 public class VkPublicationService {
 
     private static final String PRIVATE_PUBLICATION_URL = "https://vk.com/id%d?w=wall%d_%d";
@@ -29,44 +21,20 @@ public class VkPublicationService {
 
     @Value("${api.vk.version}")
     private final String apiVersion;
-    private final PublicationRepository publicationRepository;
-    private final PublicationReadMapper publicationReadMapper;
-    private final PublicationCreateMapper publicationCreateMapper;
     private final VkClient vkClient;
+    private final VkParser vkParser;
 
-    public List<PublicationReadDto> findAllByUserId(Integer userId) {
-        return publicationRepository.findAllByUserId(userId)
-            .stream()
-            .map(publicationReadMapper::map)
-            .toList();
+    public PublicationResponse publish(PublicationCreateDto publicationCreateDto) {
+        String response = makePublish(publicationCreateDto);
+        PublicationResponse publicationResponse = vkParser.parse(response);
+
+        String link = buildPostLink(publicationCreateDto.ownerId(), publicationResponse.getPostId());
+        publicationResponse.setLink(link);
+
+        return publicationResponse;
     }
 
-    @Transactional
-    public PublicationReadDto publish(@Valid PublicationCreateDto publicationCreateDto) {
-        Object response = makePublish(publicationCreateDto);
-
-        Publication publication = publicationCreateMapper.map(publicationCreateDto);
-        Integer postId = ((LinkedHashMap<String, LinkedHashMap<String, Integer>>) response)
-            .get("response")
-            .get("post_id");
-        if (publicationCreateDto.ownerId() > 0) {
-            publication.setLink(PRIVATE_PUBLICATION_URL.formatted(
-                publicationCreateDto.ownerId(),
-                publicationCreateDto.ownerId(),
-                postId));
-        } else {
-            publication.setLink(PUBLIC_PUBLICATION_URL.formatted(
-                Math.abs(publicationCreateDto.ownerId()),
-                publicationCreateDto.ownerId(),
-                postId));
-        }
-        publication.setResponse(response.toString());
-        publicationRepository.save(publication);
-
-        return publicationReadMapper.map(publication);
-    }
-
-    private Object makePublish(PublicationCreateDto publicationCreateDto) {
+    private String makePublish(PublicationCreateDto publicationCreateDto) {
         Map<String, Object> requestParams = new HashMap<>();
 
         requestParams.put("access_token", publicationCreateDto.accessToken());
@@ -78,5 +46,13 @@ public class VkPublicationService {
         requestParams.put("v", apiVersion);
 
         return vkClient.publish(requestParams);
+    }
+
+    private String buildPostLink(Integer ownerId, Integer postId) {
+        if (ownerId > 0) {
+            return PRIVATE_PUBLICATION_URL.formatted(ownerId, ownerId, postId);
+        } else {
+            return PUBLIC_PUBLICATION_URL.formatted(Math.abs(ownerId), ownerId, postId);
+        }
     }
 }
