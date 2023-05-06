@@ -11,7 +11,6 @@ import ru.smmassistant.smmbackend.dto.PublicationReadDto;
 import ru.smmassistant.smmbackend.mapper.PublicationCreateMapper;
 import ru.smmassistant.smmbackend.mapper.PublicationReadMapper;
 import ru.smmassistant.smmbackend.model.Publication;
-import ru.smmassistant.smmbackend.model.PublicationResponse;
 import ru.smmassistant.smmbackend.repository.PublicationRepository;
 
 @RequiredArgsConstructor
@@ -34,7 +33,7 @@ public class PublicationService {
 
     @Transactional
     public PublicationReadDto publish(@Valid PublicationCreateDto publicationCreateDto) {
-        PublicationResponse publicationResponse = vkPublicationService.publish(publicationCreateDto);
+        vkPublicationService.publish(publicationCreateDto);
 
         Publication publication = publicationCreateMapper.map(publicationCreateDto);
         publicationRepository.save(publication);
