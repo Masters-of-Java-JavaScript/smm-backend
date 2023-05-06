@@ -10,7 +10,7 @@ import ru.smmassistant.smmbackend.dto.PublicationCreateDto;
 import ru.smmassistant.smmbackend.service.VkPublicationService;
 
 @RequiredArgsConstructor
-class PublicationServiceValidationIt extends IntegrationTestBase {
+class TestPublicationServiceValidationIt extends IntegrationTestBase {
 
     private static final Integer USER_ID = 1;
     private static final Integer PRIVATE_OWNER_ID = 1234;
