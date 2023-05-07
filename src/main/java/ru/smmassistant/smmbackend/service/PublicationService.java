@@ -1,21 +1,19 @@
 package ru.smmassistant.smmbackend.service;
 
-import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 import ru.smmassistant.smmbackend.dto.PublicationCreateDto;
 import ru.smmassistant.smmbackend.dto.PublicationReadDto;
 import ru.smmassistant.smmbackend.mapper.PublicationCreateMapper;
 import ru.smmassistant.smmbackend.mapper.PublicationReadMapper;
 import ru.smmassistant.smmbackend.model.Publication;
+import ru.smmassistant.smmbackend.model.SocialNetwork;
 import ru.smmassistant.smmbackend.repository.PublicationRepository;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-@Validated
 @Service
 public class PublicationService {
 
@@ -32,8 +30,10 @@ public class PublicationService {
     }
 
     @Transactional
-    public PublicationReadDto publish(@Valid PublicationCreateDto publicationCreateDto) {
-        vkPublicationService.publish(publicationCreateDto);
+    public PublicationReadDto publish(PublicationCreateDto publicationCreateDto) {
+        if (publicationCreateDto.networkPublishSet().contains(SocialNetwork.VK)) {
+            vkPublicationService.publish(publicationCreateDto);
+        }
 
         Publication publication = publicationCreateMapper.map(publicationCreateDto);
         publicationRepository.save(publication);
