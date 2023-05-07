@@ -1,11 +1,15 @@
 package ru.smmassistant.smmbackend.service;
 
+import jakarta.validation.Valid;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import ru.smmassistant.smmbackend.dto.PublicationCreateDto;
 import ru.smmassistant.smmbackend.model.PublicationResponse;
 import ru.smmassistant.smmbackend.parser.VkParser;
@@ -13,6 +17,7 @@ import ru.smmassistant.smmbackend.service.client.VkClient;
 
 @RequiredArgsConstructor
 @Service
+@Validated
 @Transactional(readOnly = true)
 public class VkPublicationService {
 
@@ -24,11 +29,11 @@ public class VkPublicationService {
     private final VkClient vkClient;
     private final VkParser vkParser;
 
-    public PublicationResponse publish(PublicationCreateDto publicationCreateDto) {
+    public PublicationResponse publish(@Valid PublicationCreateDto publicationCreateDto) {
         String response = makePublish(publicationCreateDto);
         PublicationResponse publicationResponse = vkParser.parse(response);
 
-        String link = buildPostLink(publicationCreateDto.ownerId(), publicationResponse.getPostId());
+        String link = buildLink(publicationCreateDto.ownerId(), publicationResponse.getPostId());
         publicationResponse.setLink(link);
 
         return publicationResponse;
@@ -41,14 +46,15 @@ public class VkPublicationService {
         requestParams.put("owner_id", publicationCreateDto.ownerId());
         requestParams.put("message", publicationCreateDto.message());
         requestParams.put("attachments", publicationCreateDto.attachments());
-        requestParams.put("publish_date", publicationCreateDto.publishDate().toEpochSecond());
+        requestParams.put("publish_date", Optional.ofNullable(publicationCreateDto.publishDate())
+            .map(OffsetDateTime::toEpochSecond));
         requestParams.put("post_id", publicationCreateDto.postId());
         requestParams.put("v", apiVersion);
 
         return vkClient.publish(requestParams);
     }
 
-    private String buildPostLink(Integer ownerId, Integer postId) {
+    private String buildLink(Integer ownerId, Integer postId) {
         if (ownerId > 0) {
             return PRIVATE_PUBLICATION_URL.formatted(ownerId, ownerId, postId);
         } else {

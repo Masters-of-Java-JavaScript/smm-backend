@@ -1,21 +1,15 @@
 package ru.smmassistant.smmbackend.service;
 
-import static java.lang.Math.abs;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,11 +17,9 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.smmassistant.smmbackend.dto.PublicationCreateDto;
-import ru.smmassistant.smmbackend.dto.PublicationReadDto;
-import ru.smmassistant.smmbackend.mapper.PublicationCreateMapper;
-import ru.smmassistant.smmbackend.mapper.PublicationReadMapper;
-import ru.smmassistant.smmbackend.model.Publication;
-import ru.smmassistant.smmbackend.repository.PublicationRepository;
+import ru.smmassistant.smmbackend.model.PublicationResponse;
+import ru.smmassistant.smmbackend.model.SocialNetwork;
+import ru.smmassistant.smmbackend.parser.VkParser;
 import ru.smmassistant.smmbackend.service.client.VkClient;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,19 +32,16 @@ class VkPublicationServiceTest {
     private static final OffsetDateTime PUBLISH_DATE = OffsetDateTime.of(2023, 5, 13, 12, 32, 12, 123, ZoneOffset.UTC);
     private static final String MESSAGE = "Dummy message";
     private static final String ATTACHMENTS = "Dummy attachments";
-    private static final String RESPONSE = "{response={post_id=347}}";
     private static final String ACCESS_TOKEN = "Dummy accessToken";
-    private static final String PRIVATE_PUBLICATION_URL = "https://vk.com/id%d?w=wall%d_%d";
-    private static final String PUBLIC_PUBLICATION_URL = "https://vk.com/public%d?w=wall%d_%d";
-
-    @Mock
-    private PublicationRepository publicationRepository;
-
-    @Spy
-    private PublicationReadMapper publicationReadMapper;
+    private static final Set<SocialNetwork> NETWORK_PUBLISH_SET = Set.of(SocialNetwork.VK, SocialNetwork.FACEBOOK);
+    private static final String RESPONSE = "{\"response\":{\"post_id\":%d}}".formatted(POST_ID);
+    private static final String PUBLIC_PUBLICATION_URL = "https://vk.com/public%d?w=wall%d_%d"
+        .formatted(Math.abs(PUBLIC_OWNER_ID), PUBLIC_OWNER_ID, POST_ID);
+    private static final String PRIVATE_PUBLICATION_URL = "https://vk.com/id%d?w=wall%d_%d"
+        .formatted(PRIVATE_OWNER_ID, PRIVATE_OWNER_ID, POST_ID);
 
     @Spy
-    private PublicationCreateMapper publicationCreateMapper;
+    private VkParser vkParser;
 
     @Mock
     private VkClient vkClient;
@@ -61,63 +50,7 @@ class VkPublicationServiceTest {
     private VkPublicationService vkPublicationService;
 
     @Test
-    void findAllByUserId_shouldFindAllPublicationsByUserId() {
-        List<Publication> publications = new ArrayList<>();
-        Publication privatePublication = Publication.builder()
-            .id(1L)
-            .userId(USER_ID)
-            .publishDate(PUBLISH_DATE)
-            .message(MESSAGE)
-            .attachments(ATTACHMENTS)
-            .link(PRIVATE_PUBLICATION_URL.formatted(PRIVATE_OWNER_ID, PRIVATE_OWNER_ID, POST_ID))
-            .response(RESPONSE)
-            .build();
-        publications.add(privatePublication);
-        Publication publicPublication = Publication.builder()
-            .id(2L)
-            .userId(USER_ID)
-            .publishDate(PUBLISH_DATE)
-            .message(MESSAGE)
-            .attachments(ATTACHMENTS)
-            .link(PUBLIC_PUBLICATION_URL.formatted(abs(PUBLIC_OWNER_ID), PUBLIC_OWNER_ID, POST_ID))
-            .response(RESPONSE)
-            .build();
-        publications.add(publicPublication);
-
-        List<PublicationReadDto> expectedResult = new ArrayList<>();
-        PublicationReadDto privatePublicationReadDto = PublicationReadDto.builder()
-            .publishDate(PUBLISH_DATE)
-            .message(MESSAGE)
-            .attachments(ATTACHMENTS)
-            .link(PRIVATE_PUBLICATION_URL.formatted(PRIVATE_OWNER_ID, PRIVATE_OWNER_ID, POST_ID))
-            .build();
-        expectedResult.add(privatePublicationReadDto);
-        PublicationReadDto publicPublicationReadDto = PublicationReadDto.builder()
-            .publishDate(PUBLISH_DATE)
-            .message(MESSAGE)
-            .attachments(ATTACHMENTS)
-            .link(PUBLIC_PUBLICATION_URL.formatted(abs(PUBLIC_OWNER_ID), PUBLIC_OWNER_ID, POST_ID))
-            .build();
-        expectedResult.add(publicPublicationReadDto);
-
-        doReturn(publications).when(publicationRepository).findAllByUserId(USER_ID);
-        List<PublicationReadDto> actualResult = vkPublicationService.findAllByUserId(USER_ID);
-
-        assertFalse(actualResult.isEmpty());
-        assertThat(actualResult).hasSize(2);
-        assertEquals(expectedResult, actualResult);
-
-        verify(publicationRepository).findAllByUserId(any(Integer.class));
-        verify(publicationReadMapper, times(2)).map(any(Publication.class));
-        verifyNoMoreInteractions(publicationRepository, publicationReadMapper);
-    }
-
-    @Test
-    void publish_forPublicOwnerIdShouldValidatePublicationCreateDtoAndPublishToVkAndSaveToDb() {
-        LinkedHashMap<String, Integer> postId = new LinkedHashMap<>();
-        postId.put("post_id", POST_ID);
-        LinkedHashMap<String, LinkedHashMap<String, Integer>> response = new LinkedHashMap<>();
-        response.put("response", postId);
+    void publish_forPublicOwnerIdShouldPublishToVk() {
         PublicationCreateDto publicationCreateDto = PublicationCreateDto.builder()
             .userId(USER_ID)
             .accessToken(ACCESS_TOKEN)
@@ -126,34 +59,27 @@ class VkPublicationServiceTest {
             .attachments(ATTACHMENTS)
             .publishDate(PUBLISH_DATE)
             .postId(null)
+            .networkPublishSet(NETWORK_PUBLISH_SET)
             .build();
 
-        PublicationReadDto expectedResult = PublicationReadDto.builder()
-            .publishDate(PUBLISH_DATE)
-            .message(MESSAGE)
-            .attachments(ATTACHMENTS)
-            .link(PUBLIC_PUBLICATION_URL.formatted(abs(PUBLIC_OWNER_ID), PUBLIC_OWNER_ID, POST_ID))
+        PublicationResponse expectedResult = PublicationResponse.builder()
+            .postId(POST_ID)
+            .link(PUBLIC_PUBLICATION_URL)
             .build();
 
-        doReturn(response).when(vkClient).publish(anyMap());
-        PublicationReadDto actualResult = vkPublicationService.publish(publicationCreateDto);
+        doReturn(RESPONSE).when(vkClient).publish(anyMap());
+        PublicationResponse actualResult = vkPublicationService.publish(publicationCreateDto);
 
         assertThat(actualResult).isNotNull();
         assertEquals(expectedResult, actualResult);
 
         verify(vkClient).publish(anyMap());
-        verify(publicationCreateMapper).map(any(PublicationCreateDto.class));
-        verify(publicationRepository).save(any(Publication.class));
-        verify(publicationReadMapper).map(any(Publication.class));
-        verifyNoMoreInteractions(vkClient, publicationCreateMapper, publicationRepository, publicationReadMapper);
+        verify(vkParser).parse(RESPONSE);
+        verifyNoMoreInteractions(vkClient, vkParser);
     }
 
     @Test
-    void publish_forPrivateOwnerIdShouldValidatePublicationCreateDtoAndPublishToVkAndSaveToDb() {
-        LinkedHashMap<String, Integer> postId = new LinkedHashMap<>();
-        postId.put("post_id", POST_ID);
-        LinkedHashMap<String, LinkedHashMap<String, Integer>> response = new LinkedHashMap<>();
-        response.put("response", postId);
+    void publish_forPrivateOwnerIdShouldPublishToVk() {
         PublicationCreateDto publicationCreateDto = PublicationCreateDto.builder()
             .userId(USER_ID)
             .accessToken(ACCESS_TOKEN)
@@ -162,25 +88,51 @@ class VkPublicationServiceTest {
             .attachments(ATTACHMENTS)
             .publishDate(PUBLISH_DATE)
             .postId(null)
+            .networkPublishSet(NETWORK_PUBLISH_SET)
             .build();
 
-        PublicationReadDto expectedResult = PublicationReadDto.builder()
-            .publishDate(PUBLISH_DATE)
-            .message(MESSAGE)
-            .attachments(ATTACHMENTS)
-            .link(PRIVATE_PUBLICATION_URL.formatted(PRIVATE_OWNER_ID, PRIVATE_OWNER_ID, POST_ID))
+        PublicationResponse expectedResult = PublicationResponse.builder()
+            .postId(POST_ID)
+            .link(PRIVATE_PUBLICATION_URL)
             .build();
 
-        doReturn(response).when(vkClient).publish(anyMap());
-        PublicationReadDto actualResult = vkPublicationService.publish(publicationCreateDto);
+        doReturn(RESPONSE).when(vkClient).publish(anyMap());
+        PublicationResponse actualResult = vkPublicationService.publish(publicationCreateDto);
 
         assertThat(actualResult).isNotNull();
         assertEquals(expectedResult, actualResult);
 
         verify(vkClient).publish(anyMap());
-        verify(publicationCreateMapper).map(any(PublicationCreateDto.class));
-        verify(publicationRepository).save(any(Publication.class));
-        verify(publicationReadMapper).map(any(Publication.class));
-        verifyNoMoreInteractions(vkClient, publicationCreateMapper, publicationRepository, publicationReadMapper);
+        verify(vkParser).parse(RESPONSE);
+        verifyNoMoreInteractions(vkClient, vkParser);
+    }
+
+    @Test
+    void publish_forPrivateOwnerIdShouldConfirmDelayedSendToVk() {
+        PublicationCreateDto publicationCreateDto = PublicationCreateDto.builder()
+            .userId(USER_ID)
+            .accessToken(ACCESS_TOKEN)
+            .ownerId(PRIVATE_OWNER_ID)
+            .message(null)
+            .attachments(null)
+            .publishDate(null)
+            .postId(POST_ID)
+            .networkPublishSet(NETWORK_PUBLISH_SET)
+            .build();
+
+        PublicationResponse expectedResult = PublicationResponse.builder()
+            .postId(POST_ID)
+            .link(PRIVATE_PUBLICATION_URL)
+            .build();
+
+        doReturn(RESPONSE).when(vkClient).publish(anyMap());
+        PublicationResponse actualResult = vkPublicationService.publish(publicationCreateDto);
+
+        assertThat(actualResult).isNotNull();
+        assertEquals(expectedResult, actualResult);
+
+        verify(vkClient).publish(anyMap());
+        verify(vkParser).parse(RESPONSE);
+        verifyNoMoreInteractions(vkClient, vkParser);
     }
 }
