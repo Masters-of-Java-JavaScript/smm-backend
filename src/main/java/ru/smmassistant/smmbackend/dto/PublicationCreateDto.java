@@ -9,19 +9,20 @@ import lombok.Builder;
 import ru.smmassistant.smmbackend.model.SocialNetwork;
 import ru.smmassistant.smmbackend.validation.annotation.NotBlankAttachments;
 import ru.smmassistant.smmbackend.validation.annotation.NotBlankMessage;
+import ru.smmassistant.smmbackend.validation.group.VkService;
 
 @Builder
-@NotBlankMessage
-@NotBlankAttachments
+@NotBlankMessage(groups = VkService.class)
+@NotBlankAttachments(groups = VkService.class)
 public record PublicationCreateDto(
 
     @NotNull(message = "Параметр user_id является обязательным")
     Integer userId,
 
-    @NotBlank(message = "Параметр access_token является обязательным")
+    @NotBlank(message = "Параметр access_token является обязательным", groups = VkService.class)
     String accessToken,
 
-    @NotNull(message = "Параметр owner_id является обязательным")
+    @NotNull(message = "Параметр owner_id является обязательным", groups = VkService.class)
     Integer ownerId,
 
     String message,

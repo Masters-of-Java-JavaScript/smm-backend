@@ -14,10 +14,11 @@ import ru.smmassistant.smmbackend.dto.PublicationCreateDto;
 import ru.smmassistant.smmbackend.model.PublicationResponse;
 import ru.smmassistant.smmbackend.parser.VkParser;
 import ru.smmassistant.smmbackend.service.client.VkClient;
+import ru.smmassistant.smmbackend.validation.group.VkService;
 
 @RequiredArgsConstructor
 @Service
-@Validated
+@Validated({VkService.class})
 @Transactional(readOnly = true)
 public class VkPublicationService {
 

@@ -1,10 +1,10 @@
-package ru.smmassistant.smmbackend.integration.integration;
+package ru.smmassistant.smmbackend.integration;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
-import ru.smmassistant.smmbackend.integration.integration.annotation.IntegrationTest;
+import ru.smmassistant.smmbackend.integration.annotation.IntegrationTest;
 
 @IntegrationTest
 public abstract class IntegrationTestBase {

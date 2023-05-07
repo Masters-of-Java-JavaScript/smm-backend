@@ -1,4 +1,4 @@
-package ru.smmassistant.smmbackend.integration.integration.annotation;
+package ru.smmassistant.smmbackend.integration.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
