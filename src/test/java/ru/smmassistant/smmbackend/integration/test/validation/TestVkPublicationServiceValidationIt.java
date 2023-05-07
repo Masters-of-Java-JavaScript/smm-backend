@@ -1,4 +1,4 @@
-package ru.smmassistant.smmbackend.integration.test.service;
+package ru.smmassistant.smmbackend.integration.test.validation;
 
 import jakarta.validation.ConstraintViolationException;
 import java.time.OffsetDateTime;
