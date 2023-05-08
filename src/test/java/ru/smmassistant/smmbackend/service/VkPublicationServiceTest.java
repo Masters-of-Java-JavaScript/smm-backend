@@ -59,7 +59,7 @@ class VkPublicationServiceTest {
             .attachments(ATTACHMENTS)
             .publishDate(PUBLISH_DATE)
             .postId(null)
-            .networkPublishSet(NETWORK_PUBLISH_SET)
+            .socialNetworks(NETWORK_PUBLISH_SET)
             .build();
 
         PublicationResponse expectedResult = PublicationResponse.builder()
@@ -88,7 +88,7 @@ class VkPublicationServiceTest {
             .attachments(ATTACHMENTS)
             .publishDate(PUBLISH_DATE)
             .postId(null)
-            .networkPublishSet(NETWORK_PUBLISH_SET)
+            .socialNetworks(NETWORK_PUBLISH_SET)
             .build();
 
         PublicationResponse expectedResult = PublicationResponse.builder()
@@ -117,7 +117,7 @@ class VkPublicationServiceTest {
             .attachments(null)
             .publishDate(null)
             .postId(POST_ID)
-            .networkPublishSet(NETWORK_PUBLISH_SET)
+            .socialNetworks(NETWORK_PUBLISH_SET)
             .build();
 
         PublicationResponse expectedResult = PublicationResponse.builder()

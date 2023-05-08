@@ -35,7 +35,7 @@ class TestPublicationServiceValidationIt extends IntegrationTestBase {
             .attachments(ATTACHMENTS)
             .publishDate(PUBLISH_DATE)
             .postId(null)
-            .networkPublishSet(NETWORK_PUBLISH_SET)
+            .socialNetworks(NETWORK_PUBLISH_SET)
             .build();
 
         Assertions.assertThatThrownBy(() -> publicationService.publish(publicationCreateDto))
@@ -44,7 +44,7 @@ class TestPublicationServiceValidationIt extends IntegrationTestBase {
     }
 
     @Test
-    void publish_shouldThrowConstraintViolationExceptionBecauseNetworkPublishSetIsNull() {
+    void publish_shouldThrowConstraintViolationExceptionBecausesocialNetworksIsNull() {
         PublicationCreateDto publicationCreateDto = PublicationCreateDto.builder()
             .userId(USER_ID)
             .accessToken(ACCESS_TOKEN)
@@ -53,7 +53,7 @@ class TestPublicationServiceValidationIt extends IntegrationTestBase {
             .attachments(ATTACHMENTS)
             .publishDate(PUBLISH_DATE)
             .postId(null)
-            .networkPublishSet(null)
+            .socialNetworks(null)
             .build();
 
         Assertions.assertThatThrownBy(() -> publicationService.publish(publicationCreateDto))

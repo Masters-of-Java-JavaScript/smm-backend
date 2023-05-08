@@ -35,7 +35,7 @@ class TestVkPublicationServiceValidationIt extends IntegrationTestBase {
             .attachments(ATTACHMENTS)
             .publishDate(PUBLISH_DATE)
             .postId(null)
-            .networkPublishSet(NETWORK_PUBLISH_SET)
+            .socialNetworks(NETWORK_PUBLISH_SET)
             .build();
 
         Assertions.assertThatThrownBy(() -> vkPublicationService.publish(publicationCreateDto))
@@ -53,7 +53,7 @@ class TestVkPublicationServiceValidationIt extends IntegrationTestBase {
             .attachments(ATTACHMENTS)
             .publishDate(PUBLISH_DATE)
             .postId(null)
-            .networkPublishSet(NETWORK_PUBLISH_SET)
+            .socialNetworks(NETWORK_PUBLISH_SET)
             .build();
 
         Assertions.assertThatThrownBy(() -> vkPublicationService.publish(publicationCreateDto))
@@ -71,7 +71,7 @@ class TestVkPublicationServiceValidationIt extends IntegrationTestBase {
             .attachments(null)
             .publishDate(PUBLISH_DATE)
             .postId(null)
-            .networkPublishSet(NETWORK_PUBLISH_SET)
+            .socialNetworks(NETWORK_PUBLISH_SET)
             .build();
 
         Assertions.assertThatThrownBy(() -> vkPublicationService.publish(publicationCreateDto))

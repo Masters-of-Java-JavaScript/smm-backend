@@ -34,5 +34,5 @@ public record PublicationCreateDto(
     Integer postId,
 
     @NotEmpty(message = "Параметр network_publish_set должен содержать хотя бы одно значение")
-    Set<SocialNetwork> networkPublishSet) {
+    Set<SocialNetwork> socialNetworks) {
 }

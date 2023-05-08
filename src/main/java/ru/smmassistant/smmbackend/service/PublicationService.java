@@ -34,7 +34,7 @@ public class PublicationService {
 
     @Transactional
     public PublicationReadDto publish(@Valid PublicationCreateDto publicationCreateDto) {
-        if (publicationCreateDto.networkPublishSet().contains(SocialNetwork.VK)) {
+        if (publicationCreateDto.socialNetworks().contains(SocialNetwork.VK)) {
             vkPublicationService.publish(publicationCreateDto);
         }
 
