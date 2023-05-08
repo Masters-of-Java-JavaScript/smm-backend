@@ -18,7 +18,7 @@ import ru.smmassistant.smmbackend.validation.group.VkService;
 
 @RequiredArgsConstructor
 @Service
-@Validated({VkService.class})
+@Validated(VkService.class)
 @Transactional(readOnly = true)
 public class VkPublicationService {
 
