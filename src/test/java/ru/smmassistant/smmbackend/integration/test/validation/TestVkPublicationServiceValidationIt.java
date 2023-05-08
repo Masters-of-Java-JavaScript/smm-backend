@@ -40,7 +40,7 @@ class TestVkPublicationServiceValidationIt extends IntegrationTestBase {
 
         Assertions.assertThatThrownBy(() -> vkPublicationService.publish(publicationCreateDto))
             .isInstanceOf(ConstraintViolationException.class)
-            .hasMessageContaining("Параметр access_token является обязательным");
+            .hasMessageContaining("Параметр accessToken является обязательным");
     }
 
     @Test
@@ -58,7 +58,7 @@ class TestVkPublicationServiceValidationIt extends IntegrationTestBase {
 
         Assertions.assertThatThrownBy(() -> vkPublicationService.publish(publicationCreateDto))
             .isInstanceOf(ConstraintViolationException.class)
-            .hasMessageContaining("Параметр owner_id является обязательным");
+            .hasMessageContaining("Параметр ownerId является обязательным");
     }
 
     @Test

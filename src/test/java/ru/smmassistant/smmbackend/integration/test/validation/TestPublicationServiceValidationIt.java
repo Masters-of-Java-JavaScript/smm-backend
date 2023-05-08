@@ -40,7 +40,7 @@ class TestPublicationServiceValidationIt extends IntegrationTestBase {
 
         Assertions.assertThatThrownBy(() -> publicationService.publish(publicationCreateDto))
             .isInstanceOf(ConstraintViolationException.class)
-            .hasMessageContaining("Параметр user_id является обязательным");
+            .hasMessageContaining("Параметр userId является обязательным");
     }
 
     @Test
@@ -58,6 +58,6 @@ class TestPublicationServiceValidationIt extends IntegrationTestBase {
 
         Assertions.assertThatThrownBy(() -> publicationService.publish(publicationCreateDto))
             .isInstanceOf(ConstraintViolationException.class)
-            .hasMessageContaining("Параметр network_publish_set должен содержать хотя бы одно значение");
+            .hasMessageContaining("Параметр socialNetworks должен содержать хотя бы одно значение");
     }
 }

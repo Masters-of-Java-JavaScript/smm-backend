@@ -16,13 +16,13 @@ import ru.smmassistant.smmbackend.validation.group.VkService;
 @NotBlankAttachments(groups = VkService.class)
 public record PublicationCreateDto(
 
-    @NotNull(message = "Параметр user_id является обязательным")
+    @NotNull(message = "Параметр userId является обязательным")
     Integer userId,
 
-    @NotBlank(message = "Параметр access_token является обязательным", groups = VkService.class)
+    @NotBlank(message = "Параметр accessToken является обязательным", groups = VkService.class)
     String accessToken,
 
-    @NotNull(message = "Параметр owner_id является обязательным", groups = VkService.class)
+    @NotNull(message = "Параметр ownerId является обязательным", groups = VkService.class)
     Integer ownerId,
 
     String message,
@@ -33,6 +33,6 @@ public record PublicationCreateDto(
 
     Integer postId,
 
-    @NotEmpty(message = "Параметр network_publish_set должен содержать хотя бы одно значение")
+    @NotEmpty(message = "Параметр socialNetworks должен содержать хотя бы одно значение")
     Set<SocialNetwork> socialNetworks) {
 }
