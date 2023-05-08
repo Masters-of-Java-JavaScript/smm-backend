@@ -9,22 +9,18 @@ CREATE SCHEMA IF NOT EXISTS smmassistant;
 --changeset afedyakov:2
 CREATE TABLE IF NOT EXISTS smmassistant.users
 (
-    id          SERIAL          PRIMARY KEY,
+    id          INTEGER         PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     username    VARCHAR(64)     NOT NULL UNIQUE,
-    birth_date  DATE,
     firstname    VARCHAR(64),
-    lastname    VARCHAR(64),
-    role        VARCHAR(32)
+    lastname    VARCHAR(64)
 );
 
 COMMENT ON TABLE smmassistant.users IS 'Таблица пользователей';
 
 COMMENT ON COLUMN smmassistant.users.id             IS 'Уникальный идентификатор пользователя';
 COMMENT ON COLUMN smmassistant.users.username       IS 'Email почта польщзователя';
-COMMENT ON COLUMN smmassistant.users.birth_date     IS 'Дата рождения пользователя';
 COMMENT ON COLUMN smmassistant.users.firstname       IS 'Имя пользователя';
 COMMENT ON COLUMN smmassistant.users.lastname       IS 'Фамилия пользователя';
-COMMENT ON COLUMN smmassistant.users.role           IS 'Роль пользователя';
 --rollback DROP TABLE smmassistant.users;
 
 
@@ -32,18 +28,40 @@ COMMENT ON COLUMN smmassistant.users.role           IS 'Роль пользов�
 --changeset afedyakov:3
 CREATE TABLE IF NOT EXISTS smmassistant.publication
 (
-    id              BIGSERIAL                   PRIMARY KEY,
-    user_id         SERIAL                      REFERENCES smmassistant.users(id) ON DELETE CASCADE,
-    publish_date    TIMESTAMP                   NOT NULL,
+    id              BIGINT          PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     message         VARCHAR(2048),
-    attachments     VARCHAR(128)
+    attachments     VARCHAR(128),
+    publish_date    TIMESTAMP       NOT NULL,
+    user_id         INTEGER         REFERENCES smmassistant.users(id) ON DELETE CASCADE
 );
 
 COMMENT ON TABLE smmassistant.publication IS 'Таблица публикаций';
 
 COMMENT ON COLUMN smmassistant.publication.id           IS 'Уникальный идентификатор публикации';
-COMMENT ON COLUMN smmassistant.publication.user_id      IS 'Идентификатор пользователя';
-COMMENT ON COLUMN smmassistant.publication.publish_date IS 'Дата и время публикации';
 COMMENT ON COLUMN smmassistant.publication.message      IS 'Текст сообщения публикации';
 COMMENT ON COLUMN smmassistant.publication.attachments  IS 'Объект или несколько объектов, приложенных к записи';
+COMMENT ON COLUMN smmassistant.publication.publish_date IS 'Дата и время публикации';
+COMMENT ON COLUMN smmassistant.publication.user_id      IS 'Идентификатор пользователя';
+--rollback DROP TABLE smmassistant.publication;
+
+
+
+--changeset afedyakov:4
+CREATE TABLE IF NOT EXISTS smmassistant.social_network
+(
+    id              BIGINT          PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    name            VARCHAR(16)     NOT NULL,
+    account_id      BIGINT          NOT NULL,
+    access_token    VARCHAR(256)    NOT NULL,
+    user_id         INTEGER         NOT NULL,
+    CONSTRAINT social_network_unique UNIQUE (name, account_id, user_id)
+);
+
+COMMENT ON TABLE smmassistant.publication IS 'Таблица публикаций';
+
+COMMENT ON COLUMN smmassistant.social_network.id           IS 'Уникальный идентификатор социальной сети';
+COMMENT ON COLUMN smmassistant.social_network.name         IS 'Имя социальной сети';
+COMMENT ON COLUMN smmassistant.social_network.account_id   IS 'Идентификатор страницы пользователя социальной сети';
+COMMENT ON COLUMN smmassistant.social_network.access_token IS 'Токен пользователя социальной сети';
+COMMENT ON COLUMN smmassistant.social_network.user_id      IS 'Идентификатор пользователя';
 --rollback DROP TABLE smmassistant.publication;
