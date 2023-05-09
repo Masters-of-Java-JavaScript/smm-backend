@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PublicationResponse {
 
-    private Integer postId;
+    private Long postId;
 
     private String link;
 }

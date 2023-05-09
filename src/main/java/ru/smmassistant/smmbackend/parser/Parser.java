@@ -4,5 +4,5 @@ import ru.smmassistant.smmbackend.model.PublicationResponse;
 
 public interface Parser {
 
-    PublicationResponse parse(String response);
+    PublicationResponse parse(final String response);
 }

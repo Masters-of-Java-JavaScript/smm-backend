@@ -28,7 +28,7 @@ class VkPublicationServiceTest {
     private static final Integer USER_ID = 1;
     private static final Integer PRIVATE_OWNER_ID = 1234;
     private static final Integer PUBLIC_OWNER_ID = -1234;
-    private static final Integer POST_ID = 347;
+    private static final Long POST_ID = 347L;
     private static final OffsetDateTime PUBLISH_DATE = OffsetDateTime.of(2023, 5, 13, 12, 32, 12, 123, ZoneOffset.UTC);
     private static final String MESSAGE = "Dummy message";
     private static final String ATTACHMENTS = "Dummy attachments";

@@ -31,7 +31,7 @@ public record PublicationCreateDto(
 
     OffsetDateTime publishDate,
 
-    Integer postId,
+    Long postId,
 
     @NotEmpty(message = "Параметр socialNetworks должен содержать хотя бы одно значение")
     Set<SocialNetwork> socialNetworks) {

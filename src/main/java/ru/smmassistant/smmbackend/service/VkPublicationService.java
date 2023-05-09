@@ -55,7 +55,7 @@ public class VkPublicationService {
         return vkClient.publish(requestParams);
     }
 
-    private String buildLink(Integer ownerId, Integer postId) {
+    private String buildLink(Integer ownerId, Long postId) {
         if (ownerId > 0) {
             return PRIVATE_PUBLICATION_URL.formatted(ownerId, ownerId, postId);
         } else {
