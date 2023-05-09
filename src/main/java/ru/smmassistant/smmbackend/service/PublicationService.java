@@ -11,7 +11,7 @@ import ru.smmassistant.smmbackend.dto.PublicationReadDto;
 import ru.smmassistant.smmbackend.mapper.PublicationCreateMapper;
 import ru.smmassistant.smmbackend.mapper.PublicationReadMapper;
 import ru.smmassistant.smmbackend.model.Publication;
-import ru.smmassistant.smmbackend.model.SocialNetwork;
+import ru.smmassistant.smmbackend.model.SocialNetworkName;
 import ru.smmassistant.smmbackend.repository.PublicationRepository;
 
 @RequiredArgsConstructor
@@ -34,7 +34,7 @@ public class PublicationService {
 
     @Transactional
     public PublicationReadDto publish(@Valid PublicationCreateDto publicationCreateDto) {
-        if (publicationCreateDto.socialNetworks().contains(SocialNetwork.VK)) {
+        if (publicationCreateDto.socialNetworks().contains(SocialNetworkName.VK)) {
             vkPublicationService.publish(publicationCreateDto);
         }
 

@@ -18,7 +18,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.smmassistant.smmbackend.dto.PublicationCreateDto;
 import ru.smmassistant.smmbackend.model.PublicationResponse;
-import ru.smmassistant.smmbackend.model.SocialNetwork;
+import ru.smmassistant.smmbackend.model.SocialNetworkName;
 import ru.smmassistant.smmbackend.parser.VkParser;
 import ru.smmassistant.smmbackend.service.client.VkClient;
 
@@ -33,7 +33,7 @@ class VkPublicationServiceTest {
     private static final String MESSAGE = "Dummy message";
     private static final String ATTACHMENTS = "Dummy attachments";
     private static final String ACCESS_TOKEN = "Dummy accessToken";
-    private static final Set<SocialNetwork> NETWORK_PUBLISH_SET = Set.of(SocialNetwork.VK, SocialNetwork.FACEBOOK);
+    private static final Set<SocialNetworkName> SOCIAL_NETWORK_NAMES = Set.of(SocialNetworkName.VK, SocialNetworkName.FACEBOOK);
     private static final String RESPONSE = "{\"response\":{\"post_id\":%d}}".formatted(POST_ID);
     private static final String PUBLIC_PUBLICATION_URL = "https://vk.com/public%d?w=wall%d_%d"
         .formatted(Math.abs(PUBLIC_OWNER_ID), PUBLIC_OWNER_ID, POST_ID);
@@ -59,7 +59,7 @@ class VkPublicationServiceTest {
             .attachments(ATTACHMENTS)
             .publishDate(PUBLISH_DATE)
             .postId(null)
-            .socialNetworks(NETWORK_PUBLISH_SET)
+            .socialNetworks(SOCIAL_NETWORK_NAMES)
             .build();
 
         PublicationResponse expectedResult = PublicationResponse.builder()
@@ -88,7 +88,7 @@ class VkPublicationServiceTest {
             .attachments(ATTACHMENTS)
             .publishDate(PUBLISH_DATE)
             .postId(null)
-            .socialNetworks(NETWORK_PUBLISH_SET)
+            .socialNetworks(SOCIAL_NETWORK_NAMES)
             .build();
 
         PublicationResponse expectedResult = PublicationResponse.builder()
@@ -117,7 +117,7 @@ class VkPublicationServiceTest {
             .attachments(null)
             .publishDate(null)
             .postId(POST_ID)
-            .socialNetworks(NETWORK_PUBLISH_SET)
+            .socialNetworks(SOCIAL_NETWORK_NAMES)
             .build();
 
         PublicationResponse expectedResult = PublicationResponse.builder()

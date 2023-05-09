@@ -9,7 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.smmassistant.smmbackend.dto.PublicationCreateDto;
 import ru.smmassistant.smmbackend.integration.IntegrationTestBase;
-import ru.smmassistant.smmbackend.model.SocialNetwork;
+import ru.smmassistant.smmbackend.model.SocialNetworkName;
 import ru.smmassistant.smmbackend.service.VkPublicationService;
 
 @RequiredArgsConstructor
@@ -21,7 +21,7 @@ class TestVkPublicationServiceValidationIt extends IntegrationTestBase {
     private static final String MESSAGE = "Dummy message";
     private static final String ATTACHMENTS = "Dummy attachments";
     private static final String ACCESS_TOKEN = "Dummy accessToken";
-    private static final Set<SocialNetwork> NETWORK_PUBLISH_SET = Set.of(SocialNetwork.VK, SocialNetwork.FACEBOOK);
+    private static final Set<SocialNetworkName> SOCIAL_NETWORK_NAMES = Set.of(SocialNetworkName.VK, SocialNetworkName.FACEBOOK);
 
     private final VkPublicationService vkPublicationService;
 
@@ -35,7 +35,7 @@ class TestVkPublicationServiceValidationIt extends IntegrationTestBase {
             .attachments(ATTACHMENTS)
             .publishDate(PUBLISH_DATE)
             .postId(null)
-            .socialNetworks(NETWORK_PUBLISH_SET)
+            .socialNetworks(SOCIAL_NETWORK_NAMES)
             .build();
 
         Assertions.assertThatThrownBy(() -> vkPublicationService.publish(publicationCreateDto))
@@ -53,7 +53,7 @@ class TestVkPublicationServiceValidationIt extends IntegrationTestBase {
             .attachments(ATTACHMENTS)
             .publishDate(PUBLISH_DATE)
             .postId(null)
-            .socialNetworks(NETWORK_PUBLISH_SET)
+            .socialNetworks(SOCIAL_NETWORK_NAMES)
             .build();
 
         Assertions.assertThatThrownBy(() -> vkPublicationService.publish(publicationCreateDto))
@@ -71,7 +71,7 @@ class TestVkPublicationServiceValidationIt extends IntegrationTestBase {
             .attachments(null)
             .publishDate(PUBLISH_DATE)
             .postId(null)
-            .socialNetworks(NETWORK_PUBLISH_SET)
+            .socialNetworks(SOCIAL_NETWORK_NAMES)
             .build();
 
         Assertions.assertThatThrownBy(() -> vkPublicationService.publish(publicationCreateDto))

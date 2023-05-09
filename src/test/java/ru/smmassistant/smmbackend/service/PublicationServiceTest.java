@@ -26,7 +26,7 @@ import ru.smmassistant.smmbackend.dto.PublicationReadDto;
 import ru.smmassistant.smmbackend.mapper.PublicationCreateMapper;
 import ru.smmassistant.smmbackend.mapper.PublicationReadMapper;
 import ru.smmassistant.smmbackend.model.Publication;
-import ru.smmassistant.smmbackend.model.SocialNetwork;
+import ru.smmassistant.smmbackend.model.SocialNetworkName;
 import ru.smmassistant.smmbackend.repository.PublicationRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,7 +40,7 @@ class PublicationServiceTest {
     private static final String MESSAGE = "Dummy message";
     private static final String ATTACHMENTS = "Dummy attachments";
     private static final String ACCESS_TOKEN = "Dummy accessToken";
-    private static final Set<SocialNetwork> NETWORK_PUBLISH_SET = Set.of(SocialNetwork.VK, SocialNetwork.FACEBOOK);
+    private static final Set<SocialNetworkName> SOCIAL_NETWORK_NAMES = Set.of(SocialNetworkName.VK, SocialNetworkName.FACEBOOK);
 
     @Mock
     private PublicationRepository publicationRepository;
@@ -113,7 +113,7 @@ class PublicationServiceTest {
             .attachments(ATTACHMENTS)
             .publishDate(PUBLISH_DATE)
             .postId(null)
-            .socialNetworks(NETWORK_PUBLISH_SET)
+            .socialNetworks(SOCIAL_NETWORK_NAMES)
             .build();
 
         PublicationReadDto expectedResult = PublicationReadDto.builder()
@@ -144,7 +144,7 @@ class PublicationServiceTest {
             .attachments(ATTACHMENTS)
             .publishDate(PUBLISH_DATE)
             .postId(null)
-            .socialNetworks(NETWORK_PUBLISH_SET)
+            .socialNetworks(SOCIAL_NETWORK_NAMES)
             .build();
 
         PublicationReadDto expectedResult = PublicationReadDto.builder()
@@ -175,7 +175,7 @@ class PublicationServiceTest {
             .attachments(null)
             .publishDate(null)
             .postId(POST_ID)
-            .socialNetworks(NETWORK_PUBLISH_SET)
+            .socialNetworks(SOCIAL_NETWORK_NAMES)
             .build();
 
         PublicationReadDto expectedResult = PublicationReadDto.builder()

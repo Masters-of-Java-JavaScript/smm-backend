@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.Set;
 import lombok.Builder;
-import ru.smmassistant.smmbackend.model.SocialNetwork;
+import ru.smmassistant.smmbackend.model.SocialNetworkName;
 import ru.smmassistant.smmbackend.validation.annotation.NotBlankAttachments;
 import ru.smmassistant.smmbackend.validation.annotation.NotBlankMessage;
 import ru.smmassistant.smmbackend.validation.group.VkService;
@@ -34,5 +34,5 @@ public record PublicationCreateDto(
     Long postId,
 
     @NotEmpty(message = "Параметр socialNetworks должен содержать хотя бы одно значение")
-    Set<SocialNetwork> socialNetworks) {
+    Set<SocialNetworkName> socialNetworks) {
 }
