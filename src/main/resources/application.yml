@@ -32,3 +32,5 @@ api:
   vk:
     url: https://api.vk.com/method
     version: 5.131
+    client-id: 51626940
+    client-secret: 7rni32ojwNcr1XUBrLER

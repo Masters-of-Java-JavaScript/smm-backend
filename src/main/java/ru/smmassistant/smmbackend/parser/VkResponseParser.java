@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import ru.smmassistant.smmbackend.model.PublicationResponse;
 
 @Component
-public class VkParser implements Parser {
+public class VkResponseParser implements ResponseParser<PublicationResponse> {
 
     @Override
     public PublicationResponse parse(final String response) {

@@ -19,9 +19,6 @@ public record PublicationCreateDto(
     @NotNull(message = "Параметр userId является обязательным")
     Integer userId,
 
-    @NotBlank(message = "Параметр accessToken является обязательным", groups = VkService.class)
-    String accessToken,
-
     @NotNull(message = "Параметр ownerId является обязательным", groups = VkService.class)
     Integer ownerId,
 

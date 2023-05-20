@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import ru.smmassistant.smmbackend.dto.PublicationCreateDto;
 import ru.smmassistant.smmbackend.model.PublicationResponse;
-import ru.smmassistant.smmbackend.parser.VkParser;
+import ru.smmassistant.smmbackend.model.SocialNetwork;
+import ru.smmassistant.smmbackend.parser.VkResponseParser;
+import ru.smmassistant.smmbackend.repository.SocialNetworkRepository;
 import ru.smmassistant.smmbackend.service.client.VkClient;
 import ru.smmassistant.smmbackend.validation.group.VkService;
 
@@ -28,11 +30,12 @@ public class VkPublicationService {
     @Value("${api.vk.version}")
     private final String apiVersion;
     private final VkClient vkClient;
-    private final VkParser vkParser;
+    private final VkResponseParser vkResponseParser;
+    private final SocialNetworkRepository socialNetworkRepository;
 
     public PublicationResponse publish(@Valid PublicationCreateDto publicationCreateDto) {
         String response = makePublish(publicationCreateDto);
-        PublicationResponse publicationResponse = vkParser.parse(response);
+        PublicationResponse publicationResponse = vkResponseParser.parse(response);
 
         String link = buildLink(publicationCreateDto.ownerId(), publicationResponse.getPostId());
         publicationResponse.setLink(link);
@@ -43,7 +46,8 @@ public class VkPublicationService {
     private String makePublish(PublicationCreateDto publicationCreateDto) {
         Map<String, Object> requestParams = new HashMap<>();
 
-        requestParams.put("access_token", publicationCreateDto.accessToken());
+        SocialNetwork socialNetwork = socialNetworkRepository.findByUserId(publicationCreateDto.userId());
+        requestParams.put("access_token", socialNetwork.getAccessToken());
         requestParams.put("owner_id", publicationCreateDto.ownerId());
         requestParams.put("message", publicationCreateDto.message());
         requestParams.put("attachments", publicationCreateDto.attachments());

@@ -5,4 +5,5 @@ import ru.smmassistant.smmbackend.model.SocialNetwork;
 
 public interface SocialNetworkRepository extends JpaRepository<SocialNetwork, Long> {
 
+    SocialNetwork findByUserId(Integer userId);
 }
