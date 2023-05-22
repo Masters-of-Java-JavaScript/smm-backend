@@ -23,9 +23,7 @@ public class SocialNetworkController {
         @RequestParam("state") Integer userId,
         @RequestParam String code,
         HttpServletRequest httpServletRequest) {
-
-        String redirectUri = httpServletRequest.getRequestURL()
-            .toString();
+        String redirectUri = httpServletRequest.getRequestURL().toString();
         socialNetworkService.vkRegister(userId, code, redirectUri);
     }
 }
