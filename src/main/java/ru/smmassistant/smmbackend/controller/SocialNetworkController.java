@@ -20,12 +20,11 @@ public class SocialNetworkController {
     @GetMapping("/vk")
     @ResponseStatus(HttpStatus.OK)
     public void vkRegister(
-        @RequestParam Integer userId,
+        @RequestParam("state") Integer userId,
         @RequestParam String code,
         HttpServletRequest httpServletRequest) {
 
         String redirectUri = httpServletRequest.getRequestURL()
-            .append("?userId=%d".formatted(userId))
             .toString();
         socialNetworkService.vkRegister(userId, code, redirectUri);
     }
