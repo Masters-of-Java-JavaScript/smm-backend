@@ -1,21 +1,21 @@
 package ru.smmassistant.smmbackend.service;
 
+import com.vk.api.sdk.client.VkApiClient;
+import com.vk.api.sdk.client.actors.UserActor;
+import com.vk.api.sdk.exceptions.ApiException;
+import com.vk.api.sdk.exceptions.ClientException;
+import com.vk.api.sdk.objects.wall.responses.PostResponse;
 import jakarta.validation.Valid;
 import java.time.OffsetDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import ru.smmassistant.smmbackend.dto.PublicationCreateDto;
 import ru.smmassistant.smmbackend.model.PublicationResponse;
 import ru.smmassistant.smmbackend.model.SocialNetwork;
-import ru.smmassistant.smmbackend.parser.VkResponseParser;
 import ru.smmassistant.smmbackend.repository.SocialNetworkRepository;
-import ru.smmassistant.smmbackend.service.client.VkClient;
 import ru.smmassistant.smmbackend.validation.group.VkService;
 
 @RequiredArgsConstructor
@@ -27,36 +27,41 @@ public class VkPublicationService {
     private static final String PRIVATE_PUBLICATION_URL = "https://vk.com/id%d?w=wall%d_%d";
     private static final String PUBLIC_PUBLICATION_URL = "https://vk.com/public%d?w=wall%d_%d";
 
-    @Value("${api.vk.version}")
-    private final String apiVersion;
-    private final VkClient vkClient;
-    private final VkResponseParser vkResponseParser;
+    private final VkApiClient vkApiClient;
     private final SocialNetworkRepository socialNetworkRepository;
 
     public PublicationResponse publish(@Valid PublicationCreateDto publicationCreateDto) {
-        String response = makePublish(publicationCreateDto);
-        PublicationResponse publicationResponse = vkResponseParser.parse(response);
+        PostResponse response = makePublish(publicationCreateDto);
 
-        String link = buildLink(publicationCreateDto.ownerId(), publicationResponse.getPostId());
-        publicationResponse.setLink(link);
-
-        return publicationResponse;
+        return PublicationResponse.builder()
+            .postId(response.getPostId().longValue())
+            .link(buildLink(publicationCreateDto.ownerId(), response.getPostId().longValue()))
+            .build();
     }
 
-    private String makePublish(PublicationCreateDto publicationCreateDto) {
-        Map<String, Object> requestParams = new HashMap<>();
-
+    private PostResponse makePublish(PublicationCreateDto publicationCreateDto) {
         SocialNetwork socialNetwork = socialNetworkRepository.findByUserId(publicationCreateDto.userId());
-        requestParams.put("access_token", socialNetwork.getAccessToken());
-        requestParams.put("owner_id", publicationCreateDto.ownerId());
-        requestParams.put("message", publicationCreateDto.message());
-        requestParams.put("attachments", publicationCreateDto.attachments());
-        requestParams.put("publish_date", Optional.ofNullable(publicationCreateDto.publishDate())
-            .map(OffsetDateTime::toEpochSecond));
-        requestParams.put("post_id", publicationCreateDto.postId());
-        requestParams.put("v", apiVersion);
+        UserActor actor = new UserActor(socialNetwork.getUserId(), socialNetwork.getAccessToken());
 
-        return vkClient.publish(requestParams);
+        try {
+            return vkApiClient.wall()
+                .post(actor)
+                .ownerId(publicationCreateDto.ownerId())
+                .message(publicationCreateDto.message())
+                .attachments(publicationCreateDto.attachments())
+                .publishDate(Optional.ofNullable(publicationCreateDto.publishDate())
+                    .map(OffsetDateTime::toEpochSecond)
+                    .map(Math::toIntExact)
+                    .orElse(0))
+                .postId(Optional.ofNullable(publicationCreateDto.postId())
+                    .map(Math::toIntExact)
+                    .orElse(0))
+                .execute();
+        } catch (ApiException e) {
+            throw new RuntimeException(e);
+        } catch (ClientException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private String buildLink(Integer ownerId, Long postId) {
