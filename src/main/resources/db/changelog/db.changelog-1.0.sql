@@ -73,7 +73,6 @@ CREATE TABLE IF NOT EXISTS smmassistant.publication_info
 (
     id                  BIGINT          PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     social_network_name VARCHAR(16)     NOT NULL,
-    post_id             BIGINT          NOT NULL,
     link                VARCHAR(128)    NOT NULL,
     publication_id      BIGINT          NOT NULL REFERENCES smmassistant.publication(id) ON DELETE CASCADE
 );
@@ -82,7 +81,6 @@ COMMENT ON TABLE smmassistant.publication IS 'Таблица информаци�
 
 COMMENT ON COLUMN smmassistant.publication_info.id              IS 'Уникальный идентификатор информации о публикации';
 COMMENT ON COLUMN smmassistant.social_network.name              IS 'Имя социальной сети';
-COMMENT ON COLUMN smmassistant.publication_info.post_id         IS 'Идентификатор публикации в сети';
 COMMENT ON COLUMN smmassistant.publication_info.link            IS 'Ссылка на публикацию';
 COMMENT ON COLUMN smmassistant.publication_info.publication_id  IS 'Идентификатор публикации';
 --rollback DROP TABLE smmassistant.publication_info;

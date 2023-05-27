@@ -1,6 +1,7 @@
 package ru.smmassistant.smmbackend.dto;
 
 import java.time.OffsetDateTime;
+import java.util.Map;
 import lombok.Builder;
 
 @Builder
@@ -10,5 +11,7 @@ public record PublicationReadDto(
 
     String message,
 
-    String attachments) {
+    String attachments,
+
+    Map<String, String> socialNetworkLinkList) {
 }

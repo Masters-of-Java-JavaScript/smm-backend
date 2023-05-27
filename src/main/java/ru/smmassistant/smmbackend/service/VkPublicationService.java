@@ -25,9 +25,6 @@ import ru.smmassistant.smmbackend.validation.group.VkService;
 @Transactional(readOnly = true)
 public class VkPublicationService {
 
-    private static final String PRIVATE_PUBLICATION_URL = "https://vk.com/id%d?w=wall%d_%d";
-    private static final String PUBLIC_PUBLICATION_URL = "https://vk.com/public%d?w=wall%d_%d";
-
     private final VkApiClient vkApiClient;
     private final SocialNetworkRepository socialNetworkRepository;
     private final PublicationInfoRepository publicationInfoRepository;
@@ -52,20 +49,15 @@ public class VkPublicationService {
 
             return PublicationInfo.builder()
                 .socialNetworkName(SocialNetworkName.VK)
-                .postId(response.getPostId().longValue())
                 .link(buildLink(socialNetwork.getAccountId(), response.getPostId().longValue()))
-                .publicationId(publication.getId())
+                .publication(publication)
                 .build();
         } catch (ApiException | ClientException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private String buildLink(Long ownerId, Long postId) {
-        if (ownerId > 0) {
-            return PRIVATE_PUBLICATION_URL.formatted(ownerId, ownerId, postId);
-        } else {
-            return PUBLIC_PUBLICATION_URL.formatted(Math.abs(ownerId), ownerId, postId);
-        }
+    private String buildLink(Long accountId, Long postId) {
+        return String.format("https://vk.com/id%d?w=wall%d_%d", accountId, accountId, postId);
     }
 }
