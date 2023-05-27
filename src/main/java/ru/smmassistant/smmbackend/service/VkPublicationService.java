@@ -5,6 +5,7 @@ import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.objects.wall.responses.PostResponse;
+import com.vk.api.sdk.queries.wall.WallPostQuery;
 import jakarta.validation.Valid;
 import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
@@ -43,18 +44,19 @@ public class VkPublicationService {
         UserActor actor = new UserActor(socialNetwork.getUserId(), socialNetwork.getAccessToken());
 
         try {
-            return vkApiClient.wall().post(actor)
-                .ownerId(publicationCreateDto.accountId().intValue())
-                .message(publicationCreateDto.message())
-                .attachments(publicationCreateDto.attachments())
-                .publishDate(publicationCreateDto.publishDate()
-                    .map(OffsetDateTime::toEpochSecond)
-                    .map(Long::intValue)
-                    .orElse(null))
-                .postId(publicationCreateDto.postId()
-                    .map(Long::intValue)
-                    .orElse(null))
-                .execute();
+            WallPostQuery query = vkApiClient.wall().post(actor);
+            query.ownerId(publicationCreateDto.accountId().intValue());
+            query.message(publicationCreateDto.message());
+            query.attachments(publicationCreateDto.attachments());
+            publicationCreateDto.publishDate()
+                .map(OffsetDateTime::toEpochSecond)
+                .map(Long::intValue)
+                .ifPresent(query::publishDate);
+            publicationCreateDto.postId()
+                .map(Long::intValue)
+                .ifPresent(query::postId);
+
+            return query.execute();
         } catch (ApiException | ClientException e) {
             throw new RuntimeException(e);
         }
