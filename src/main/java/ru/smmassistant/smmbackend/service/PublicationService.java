@@ -34,12 +34,12 @@ public class PublicationService {
 
     @Transactional
     public PublicationReadDto publish(@Valid PublicationCreateDto publicationCreateDto) {
-        if (publicationCreateDto.socialNetworks().contains(SocialNetworkName.VK)) {
-            vkPublicationService.publish(publicationCreateDto);
-        }
-
         Publication publication = publicationCreateMapper.map(publicationCreateDto);
         publicationRepository.save(publication);
+
+        if (publicationCreateDto.socialNetworks().contains(SocialNetworkName.VK)) {
+            vkPublicationService.publish(publication);
+        }
 
         return publicationReadMapper.map(publication);
     }
