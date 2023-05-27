@@ -7,7 +7,6 @@ import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.objects.wall.responses.PostResponse;
 import jakarta.validation.Valid;
 import java.time.OffsetDateTime;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,12 +29,12 @@ public class VkPublicationService {
     private final VkApiClient vkApiClient;
     private final SocialNetworkRepository socialNetworkRepository;
 
-    public PublicationResponse publish(@Valid PublicationCreateDto publicationCreateDto) {
+    public void publish(@Valid PublicationCreateDto publicationCreateDto) {
         PostResponse response = makePublish(publicationCreateDto);
 
-        return PublicationResponse.builder()
+        PublicationResponse.builder()
             .postId(response.getPostId().longValue())
-            .link(buildLink(publicationCreateDto.ownerId(), response.getPostId().longValue()))
+            .link(buildLink(publicationCreateDto.accountId(), response.getPostId().longValue()))
             .build();
     }
 
@@ -44,27 +43,24 @@ public class VkPublicationService {
         UserActor actor = new UserActor(socialNetwork.getUserId(), socialNetwork.getAccessToken());
 
         try {
-            return vkApiClient.wall()
-                .post(actor)
-                .ownerId(publicationCreateDto.ownerId())
+            return vkApiClient.wall().post(actor)
+                .ownerId(publicationCreateDto.accountId().intValue())
                 .message(publicationCreateDto.message())
                 .attachments(publicationCreateDto.attachments())
-                .publishDate(Optional.ofNullable(publicationCreateDto.publishDate())
+                .publishDate(publicationCreateDto.publishDate()
                     .map(OffsetDateTime::toEpochSecond)
-                    .map(Math::toIntExact)
-                    .orElse(0))
-                .postId(Optional.ofNullable(publicationCreateDto.postId())
-                    .map(Math::toIntExact)
-                    .orElse(0))
+                    .map(Long::intValue)
+                    .orElse(null))
+                .postId(publicationCreateDto.postId()
+                    .map(Long::intValue)
+                    .orElse(null))
                 .execute();
-        } catch (ApiException e) {
-            throw new RuntimeException(e);
-        } catch (ClientException e) {
+        } catch (ApiException | ClientException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private String buildLink(Integer ownerId, Long postId) {
+    private String buildLink(Long ownerId, Long postId) {
         if (ownerId > 0) {
             return PRIVATE_PUBLICATION_URL.formatted(ownerId, ownerId, postId);
         } else {

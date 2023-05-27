@@ -1,9 +1,9 @@
 package ru.smmassistant.smmbackend.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
+import java.util.Optional;
 import java.util.Set;
 import lombok.Builder;
 import ru.smmassistant.smmbackend.model.SocialNetworkName;
@@ -20,15 +20,15 @@ public record PublicationCreateDto(
     Integer userId,
 
     @NotNull(message = "Параметр ownerId является обязательным", groups = VkService.class)
-    Integer ownerId,
+    Long accountId,
 
     String message,
 
     String attachments,
 
-    OffsetDateTime publishDate,
+    Optional<OffsetDateTime> publishDate,
 
-    Long postId,
+    Optional<Long> postId,
 
     @NotEmpty(message = "Параметр socialNetworks должен содержать хотя бы одно значение")
     Set<SocialNetworkName> socialNetworks) {

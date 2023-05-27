@@ -27,8 +27,3 @@ spring:
 
 client:
   url: ${FRONTEND_URL:http://smmassistant.hopto.org:3000}
-
-api:
-  vk:
-    client-id: 51655444
-    client-secret: 0MulJcb2ekYex9ZOfV3L

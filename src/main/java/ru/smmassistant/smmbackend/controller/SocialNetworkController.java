@@ -1,9 +1,8 @@
 package ru.smmassistant.smmbackend.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -17,13 +16,12 @@ public class SocialNetworkController {
 
     private final SocialNetworkService socialNetworkService;
 
-    @GetMapping("/vk")
+    @PostMapping("/vk")
     @ResponseStatus(HttpStatus.OK)
     public void vkRegister(
-        @RequestParam("state") Integer userId,
-        @RequestParam String code,
-        HttpServletRequest httpServletRequest) {
-        String redirectUri = httpServletRequest.getRequestURL().toString();
-        socialNetworkService.vkRegister(userId, code, redirectUri);
+        @RequestParam("user_id") Integer userId,
+        @RequestParam("access_token") String accessToken,
+        @RequestParam("account_id") Long accountId) {
+        socialNetworkService.vkRegister(userId, accessToken, accountId);
     }
 }
