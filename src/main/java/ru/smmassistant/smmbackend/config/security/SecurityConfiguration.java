@@ -41,8 +41,9 @@ public class SecurityConfiguration {
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 /* Application endpoints */
-                .requestMatchers("/api/v1").hasAuthority(Role.ADMIN.getAuthority())
-                .anyRequest().permitAll())
+                .requestMatchers("/publication/**").hasAuthority(Role.USER.getAuthority())
+                .requestMatchers("/register/**").hasAuthority(Role.USER.getAuthority())
+                .anyRequest().authenticated())
             /* Enabling protection for OAuth 2, i.e. enabling accessToken verification */
             .oauth2ResourceServer()
             /* JWT is used to get accessToken */
