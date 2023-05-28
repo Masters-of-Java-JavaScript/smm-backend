@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,5 +35,6 @@ public class Publication {
     private String attachments;
 
     @OneToMany(mappedBy = "publication")
-    private List<PublicationInfo> publicationInfoList;
+    @Builder.Default
+    private List<PublicationInfo> publicationInfoList = new ArrayList<>();
 }

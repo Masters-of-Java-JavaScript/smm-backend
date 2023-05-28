@@ -32,6 +32,7 @@ public class VkPublicationService {
     public void publish(@Valid Publication publication) {
         PublicationInfo publicationInfo = makePublish(publication);
         publicationInfoRepository.save(publicationInfo);
+        publication.getPublicationInfoList().add(publicationInfo);
     }
 
     private PublicationInfo makePublish(Publication publication) {
