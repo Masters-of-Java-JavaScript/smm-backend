@@ -32,7 +32,7 @@ public class PublicationInfo {
 
     private String link;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "publication_id")
     private Publication publication;
 }

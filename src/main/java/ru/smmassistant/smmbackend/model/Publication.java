@@ -12,7 +12,9 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -20,6 +22,8 @@ import lombok.NoArgsConstructor;
 @Table(schema = "smmassistant", name = "publication")
 @Builder
 @Entity
+@ToString(exclude = "publicationInfoList")
+@EqualsAndHashCode(exclude = "publicationInfoList")
 public class Publication {
 
     @Id
